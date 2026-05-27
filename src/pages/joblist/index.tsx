@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Layout from "@/components/Layout";
 import ListPagination from "@/components/ListPagination";
 import Post from "@/components/Post";
@@ -174,7 +175,12 @@ const JobList = ({ userId }: InferGetServerSidePropsType<typeof getServerSidePro
   }
 
   return (
-    <div>
+    <>
+      <Head>
+        <title>전체 공고 | 더줄게</title>
+        <meta name="description" content="더줄게의 전체 공고를 확인하세요." />
+      </Head>
+      <div>
       <RecommendJobs
         userData={userData}
         isUserDataLoading={isUserDataLoading}
@@ -230,6 +236,7 @@ const JobList = ({ userId }: InferGetServerSidePropsType<typeof getServerSidePro
         />
       </div>
     </div>
+    </>
   );
 };
 

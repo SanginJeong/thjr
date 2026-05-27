@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getCookieValue } from "@/utils/getCookie";
@@ -91,7 +92,12 @@ const ProfileDetail = ({ userId }: InferGetServerSidePropsType<typeof getServerS
   const { items, limit, count, hasNext } = userApplication;
 
   return (
-    <div>
+    <>
+      <Head>
+        <title>프로필 | 더줄게</title>
+        <meta name="description" content="내 프로필과 지원 내역을 확인하세요." />
+      </Head>
+      <div>
       <ProfileSection item={userInfo.item} />
       {count === 0 ? (
         <EmptyApplicationLog />
@@ -107,6 +113,7 @@ const ProfileDetail = ({ userId }: InferGetServerSidePropsType<typeof getServerS
         />
       )}
     </div>
+    </>
   );
 };
 

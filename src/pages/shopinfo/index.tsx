@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Button from "@/components/Button";
 import Layout from "@/components/Layout";
 import useCheckAuth from "@/hooks/useCheckAuth";
@@ -23,7 +24,12 @@ const ShopInfo = () => {
   }, [router]);
 
   return (
-    <div>
+    <>
+      <Head>
+        <title>내 가게 | 더줄게</title>
+        <meta name="description" content="내 가게 정보를 관리하세요." />
+      </Head>
+      <div>
       <div className="mx-auto max-w-351 pt-40 tablet:max-w-680 tablet:pt-40 desktop:max-w-964">
         <h1 className="mb-16 text-20 font-bold tablet:mb-24 tablet:text-28">내가게</h1>
         <div className="flex h-195 flex-col items-center justify-center gap-24 rounded-12 border bg-transparent">
@@ -34,6 +40,7 @@ const ShopInfo = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

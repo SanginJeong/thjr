@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Textarea from "@/components/Textarea";
@@ -164,7 +165,12 @@ const ProfileRegister = ({ userId }: InferGetServerSidePropsType<typeof getServe
   }, [isPending]);
 
   return (
-    <div className="bg-gray-5">
+    <>
+      <Head>
+        <title>프로필 등록 | 더줄게</title>
+        <meta name="description" content="내 프로필을 등록하세요." />
+      </Head>
+      <div className="bg-gray-5">
       <div className="mx-auto flex max-w-5xl flex-col gap-32 px-24 py-60">
         <h2 className="flex items-center justify-between">
           <span className="text-20-bold tablet:text-28-bold">내 프로필</span>
@@ -232,6 +238,7 @@ const ProfileRegister = ({ userId }: InferGetServerSidePropsType<typeof getServe
         />
       </div>
     </div>
+    </>
   );
 };
 

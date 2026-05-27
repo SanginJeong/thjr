@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -114,7 +115,12 @@ const Signup = () => {
   };
 
   return (
-    <div className="mx-auto my-[15%] w-350">
+    <>
+      <Head>
+        <title>회원가입 | 더줄게</title>
+        <meta name="description" content="더줄게에 가입하세요." />
+      </Head>
+      <div className="mx-auto my-[15%] w-350">
       <Link href="/">
         <Logo className="mx-auto mb-40 w-248 text-green-60" />
       </Link>
@@ -213,6 +219,7 @@ const Signup = () => {
         ]}
       ></MessageModal>
     </div>
+    </>
   );
 };
 

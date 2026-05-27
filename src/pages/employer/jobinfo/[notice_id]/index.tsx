@@ -1,3 +1,4 @@
+import Head from "next/head";
 import type { InferGetServerSidePropsType } from "next";
 import { useState } from "react";
 import JobInfoCard from "../../_components/JobInfoCard";
@@ -121,7 +122,12 @@ const JopInfo = ({ shopId, noticeId }: InferGetServerSidePropsType<typeof getSer
   }
 
   return (
-    <div className="bg-gray-5">
+    <>
+      <Head>
+        <title>공고 관리 | 더줄게</title>
+        <meta name="description" content="공고 상세 및 지원자 현황을 확인하세요." />
+      </Head>
+      <div className="bg-gray-5">
       <div className="px-12 tablet:px-32">
         <>
           <section className="mx-auto py-40 tablet:py-60 desktop:max-w-964">
@@ -177,6 +183,7 @@ const JopInfo = ({ shopId, noticeId }: InferGetServerSidePropsType<typeof getSer
         ></MessageModal>
       )}
     </div>
+    </>
   );
 };
 

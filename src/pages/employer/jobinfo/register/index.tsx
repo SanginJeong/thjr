@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import RegisterForm, { FormData } from "../_components/RegisterForm";
 import { usePostShopNoticesQuery } from "@/hooks/api/notice/usePostShopNoticesQuery";
@@ -46,7 +47,12 @@ const RegisterJobinfo = () => {
   };
 
   return (
-    <div className="bg-gray-5">
+    <>
+      <Head>
+        <title>공고 등록 | 더줄게</title>
+        <meta name="description" content="새 공고를 등록하세요." />
+      </Head>
+      <div className="bg-gray-5">
       <div className="m-auto max-w-1028 px-12 py-40 tablet:px-32 tablet:py-60">
         <div className="relative">
           <IcClose
@@ -58,6 +64,7 @@ const RegisterJobinfo = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

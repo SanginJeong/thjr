@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { dehydrate, QueryClient, useQueryClient } from "@tanstack/react-query";
 import { getShopInfo, useGetShopInfoQuery } from "@/hooks/api/shop/useGetShopInfoQuery";
@@ -101,7 +102,12 @@ const EditShopPage = ({ userId, shopId }: InferGetServerSidePropsType<typeof get
   };
 
   return (
-    <div className="bg-gray-5">
+    <>
+      <Head>
+        <title>가게 수정 | 더줄게</title>
+        <meta name="description" content="가게 정보를 수정하세요." />
+      </Head>
+      <div className="bg-gray-5">
       <div className="m-auto max-w-1028 px-12 py-40 tablet:px-32 tablet:py-60">
         <div className="relative">
           <IcClose
@@ -118,6 +124,7 @@ const EditShopPage = ({ userId, shopId }: InferGetServerSidePropsType<typeof get
         </div>
       </div>
     </div>
+    </>
   );
 };
 

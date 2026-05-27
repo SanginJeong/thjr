@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -76,7 +77,12 @@ const Signin = () => {
   };
 
   return (
-    <div className="mx-auto mt-[15%] w-350">
+    <>
+      <Head>
+        <title>로그인 | 더줄게</title>
+        <meta name="description" content="더줄게에 로그인하세요." />
+      </Head>
+      <div className="mx-auto mt-[15%] w-350">
       <Link href="/">
         <Logo className="text-green-60 mx-auto mb-40 w-248" />
       </Link>
@@ -138,6 +144,7 @@ const Signin = () => {
         ]}
       />
     </div>
+    </>
   );
 };
 

@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import RegisterForm, { FormData } from "@/pages/employer/jobinfo/_components/RegisterForm";
 import { usePutShopNoticeDetailQuery } from "@/hooks/api/notice/usePutShopNoticeDetail";
@@ -107,7 +108,12 @@ const EditJobInfo = ({ shopId, noticeId }: InferGetServerSidePropsType<typeof ge
   };
 
   return (
-    <div className="bg-gray-5">
+    <>
+      <Head>
+        <title>공고 수정 | 더줄게</title>
+        <meta name="description" content="공고를 수정하세요." />
+      </Head>
+      <div className="bg-gray-5">
       <div className="m-auto max-w-1028 px-12 py-40 tablet:px-32 tablet:py-60">
         <div className="relative">
           <IcClose
@@ -124,6 +130,7 @@ const EditJobInfo = ({ shopId, noticeId }: InferGetServerSidePropsType<typeof ge
         </div>
       </div>
     </div>
+    </>
   );
 };
 

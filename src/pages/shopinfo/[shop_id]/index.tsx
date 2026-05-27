@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Button from "@/components/Button";
 import Layout from "@/components/Layout";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -106,7 +107,12 @@ const ShopInfoDetail = ({ shopId }: InferGetServerSidePropsType<typeof getServer
   }
 
   return (
-    <div>
+    <>
+      <Head>
+        <title>가게 상세 | 더줄게</title>
+        <meta name="description" content="가게 상세 정보를 확인하세요." />
+      </Head>
+      <div>
       <div className="mx-auto my-40 flex max-w-351 flex-col gap-16 tablet:my-60 tablet:max-w-680 tablet:gap-24 desktop:max-w-964">
         <h1 className="text-20 font-bold tablet:text-28">내 가게</h1>
         <div className="flex flex-col rounded-12 bg-green-10 p-20 tablet:p-24 desktop:flex-row desktop:gap-31">
@@ -171,6 +177,7 @@ const ShopInfoDetail = ({ shopId }: InferGetServerSidePropsType<typeof getServer
         </div>
       )}
     </div>
+    </>
   );
 };
 

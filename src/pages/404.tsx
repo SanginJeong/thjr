@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { ReactNode } from "react";
 import Layout from "@/components/Layout";
 import Button from "@/components/Button";
@@ -11,7 +12,12 @@ const NotFound = () => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-32 p-24">
+    <>
+      <Head>
+        <title>페이지를 찾을 수 없음 | 더줄게</title>
+        <meta name="description" content="요청하신 페이지를 찾을 수 없습니다." />
+      </Head>
+      <div className="flex flex-1 flex-col items-center justify-center gap-32 p-24">
       <h1 className="from-green-40 to-green-60 bg-gradient-to-br bg-clip-text text-[100px] font-extrabold leading-none text-transparent tablet:text-[150px] desktop:text-[200px]">
         404
       </h1>
@@ -34,6 +40,7 @@ const NotFound = () => {
         </Button>
       </div>
     </div>
+    </>
   );
 };
 
