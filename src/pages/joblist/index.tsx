@@ -49,11 +49,9 @@ const JobList = ({ userId }: InferGetServerSidePropsType<typeof getServerSidePro
   const jobDataApiParams: getNoticesRequest = { offset, limit, sort, ...filterConditions };
 
   if (sort === "time") {
-    const oneHourFromNow = new Date();
-    oneHourFromNow.setHours(oneHourFromNow.getHours() + 1);
-    const startsAtGteTime = oneHourFromNow.toISOString().split(".")[0] + "Z";
-    if (!jobDataApiParams.startsAtGte || jobDataApiParams.startsAtGte < startsAtGteTime) {
-      jobDataApiParams.startsAtGte = startsAtGteTime;
+    const tenSecondsLater = new Date(Date.now() + 10000).toISOString().split(".")[0] + "Z";
+    if (!jobDataApiParams.startsAtGte || jobDataApiParams.startsAtGte < tenSecondsLater) {
+      jobDataApiParams.startsAtGte = tenSecondsLater;
     }
   }
 
@@ -181,61 +179,61 @@ const JobList = ({ userId }: InferGetServerSidePropsType<typeof getServerSidePro
         <meta name="description" content="더줄게의 전체 공고를 확인하세요." />
       </Head>
       <div>
-      <RecommendJobs
-        userData={userData}
-        isUserDataLoading={isUserDataLoading}
-        recommendData={recommendData}
-        isRecommendDataLoading={isRecommendDataLoading}
-        keyword={keyword}
-        userId={userId}
-      />
-      {hasJobData ? (
-        <div className="mx-auto mb-40 mt-60 px-12 mobile:max-w-375 tablet:max-w-678 tablet:px-0 desktop:max-w-964">
-          <div className="mb-16 flex flex-col items-start justify-start gap-16 tablet:mb-40 tablet:flex-row tablet:items-center tablet:justify-between">
-            {keyword && keyword.trim() !== "" ? (
-              <div className="text-20 font-bold tablet:text-28">
-                <h2 className="inline text-primary">{keyword}</h2>에 대한 공고 목록
-              </div>
-            ) : (
-              <h2 className="text-20 font-bold tablet:text-28">전체 공고</h2>
-            )}
-            <SelectBar sort={sort} onSortChange={handleSortChange} onApplyFilter={handleApplyFilter} />
-          </div>
-          <div className="grid grid-cols-2 gap-8 desktop:grid-cols-3 desktop:gap-14">
-            {jobData?.items.map((data) => (
-              <Link key={data.item.id} href={`/jobinfo/${data.item.shop.item.id}/${data.item.id}`}>
-                <Post
-                  {...data.item}
-                  {...data.item.shop.item}
-                  address={data.item.shop.item.address1 as SeoulAddress}
-                  id={data.item.shop.item.id}
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="mx-auto mt-40 pl-12 mobile:max-w-350 tablet:max-w-678 tablet:pl-0 desktop:max-w-964">
-          <div className="flex justify-between">
-            <h2 className="text-20 font-bold tablet:text-28">전체 공고</h2>
-            <SelectBar sort={sort} onSortChange={handleSortChange} onApplyFilter={handleApplyFilter} />
-          </div>
-          <div className="mt-100 flex justify-center">
-            <p className="text-14 font-bold tablet:text-20">조건에 맞는 공고가 없습니다.</p>
-          </div>
-        </div>
-      )}
-
-      <div className="mb-80 tablet:mb-60">
-        <ListPagination
-          limit={limit}
-          count={jobData?.count ?? 0}
-          activePage={activePage}
-          hasNext={jobData?.hasNext ?? false}
-          onPageChange={handlePageChange}
+        <RecommendJobs
+          userData={userData}
+          isUserDataLoading={isUserDataLoading}
+          recommendData={recommendData}
+          isRecommendDataLoading={isRecommendDataLoading}
+          keyword={keyword}
+          userId={userId}
         />
+        {hasJobData ? (
+          <div className="mx-auto mb-40 mt-60 px-12 mobile:max-w-375 tablet:max-w-678 tablet:px-0 desktop:max-w-964">
+            <div className="mb-16 flex flex-col items-start justify-start gap-16 tablet:mb-40 tablet:flex-row tablet:items-center tablet:justify-between">
+              {keyword && keyword.trim() !== "" ? (
+                <div className="text-20 font-bold tablet:text-28">
+                  <h2 className="inline text-primary">{keyword}</h2>에 대한 공고 목록
+                </div>
+              ) : (
+                <h2 className="text-20 font-bold tablet:text-28">전체 공고</h2>
+              )}
+              <SelectBar sort={sort} onSortChange={handleSortChange} onApplyFilter={handleApplyFilter} />
+            </div>
+            <div className="grid grid-cols-2 gap-8 desktop:grid-cols-3 desktop:gap-14">
+              {jobData?.items.map((data) => (
+                <Link key={data.item.id} href={`/jobinfo/${data.item.shop.item.id}/${data.item.id}`}>
+                  <Post
+                    {...data.item}
+                    {...data.item.shop.item}
+                    address={data.item.shop.item.address1 as SeoulAddress}
+                    id={data.item.shop.item.id}
+                  />
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="mx-auto mt-40 pl-12 mobile:max-w-350 tablet:max-w-678 tablet:pl-0 desktop:max-w-964">
+            <div className="flex justify-between">
+              <h2 className="text-20 font-bold tablet:text-28">전체 공고</h2>
+              <SelectBar sort={sort} onSortChange={handleSortChange} onApplyFilter={handleApplyFilter} />
+            </div>
+            <div className="mt-100 flex justify-center">
+              <p className="text-14 font-bold tablet:text-20">조건에 맞는 공고가 없습니다.</p>
+            </div>
+          </div>
+        )}
+
+        <div className="mb-80 tablet:mb-60">
+          <ListPagination
+            limit={limit}
+            count={jobData?.count ?? 0}
+            activePage={activePage}
+            hasNext={jobData?.hasNext ?? false}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
-    </div>
     </>
   );
 };
