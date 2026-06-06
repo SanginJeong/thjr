@@ -1,0 +1,99 @@
+language: ko-KR
+
+reviews:
+  request_changes_workflow: true
+  high_level_summary: true
+  review_status: true
+  poem: false
+  walkthrough: true
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - dev
+
+  path_filters:
+    - "!package-lock.json"
+    - "!.next/**"
+    - "!node_modules/**"
+    - "!public/**"
+
+  path_instructions:
+    - path: "src/pages/**/*.tsx"
+      instructions: |
+        [Next.js 14 Pages Router]
+        - getServerSideProps / getStaticProps 사용이 적절한지 — 클라이언트 패칭으로 충분한 데이터를 SSR로 처리하지 않는지
+        - getLayout 패턴이 일관되게 사용되는지 (_app.tsx의 getLayout 타입과 일치하는지)
+        - Next.js Link, Image, Head 컴포넌트가 올바르게 사용되는지 (a 태그나 img 태그를 직접 사용하지 않는지)
+        - 페이지별 Head(title, description) 설정이 누락되지 않았는지
+        - _app.tsx / _document.tsx에 페이지별 로직이 유입되지 않는지
+
+        [아키텍처 & 컴포넌트 설계]
+        - 페이지 컴포넌트가 UI 조합에만 집중하는지, 비즈니스 로직이 hook이나 유틸로 분리되어 있는지
+        - props drilling이 과도하게 발생하는지, Context나 React Query로 해소할 수 있는지
+        - 재사용 가능한 UI를 src/components로 추출하지 않고 인라인으로 작성하지 않는지
+
+        [성능]
+        - 큰 컴포넌트나 라이브러리에 dynamic import가 적용되어 있는지
+        - 이미지에 next/image가 사용되고 있는지, width/height/priority 속성이 올바른지
+        - 불필요한 리렌더링을 유발하는 패턴이 없는지 (useMemo, useCallback 누락 등)
+        - 리스트 렌더링에 key가 index가 아닌 고유값을 사용하는지
+
+        [Tailwind CSS]
+        - 반복되는 클래스 조합은 컴포넌트나 clsx/twMerge 유틸로 추출했는지
+        - 반응형 breakpoint가 모바일 퍼스트(sm → md → lg)로 작성되어 있는지
+        - 하드코딩된 색상값(#fff, rgb 등) 대신 Tailwind 토큰을 사용하는지
+
+        [접근성]
+        - 인터랙티브 요소(버튼, 링크)에 aria 속성이나 적절한 role이 있는지
+        - 이미지 alt 텍스트가 의미 있는 내용으로 작성되어 있는지
+        - 키보드 네비게이션이 가능한 구조인지
+
+    - path: "src/components/**/*.tsx"
+      instructions: |
+        [컴포넌트 설계]
+        - 컴포넌트가 단일 책임 원칙을 따르는지, 너무 많은 역할을 하지 않는지
+        - props 인터페이스가 명확하게 정의되어 있는지, 불필요한 optional props가 없는지
+        - 재사용성을 고려한 추상화 수준인지 (너무 specific하거나 너무 generic하지 않은지)
+        - 조건부 렌더링이 복잡해서 별도 컴포넌트로 분리하는 게 나은 경우는 없는지
+
+        [성능]
+        - 불필요한 리렌더링을 유발하는 패턴이 없는지 (useMemo, useCallback, React.memo 누락 등)
+        - 리스트 렌더링에 key가 index가 아닌 고유값을 사용하는지
+        - 이미지에 next/image가 사용되고 있는지
+
+        [Tailwind CSS]
+        - 반복되는 클래스 조합은 clsx/twMerge로 추출했는지
+        - 반응형 breakpoint가 모바일 퍼스트(sm → md → lg)로 작성되어 있는지
+        - 하드코딩된 색상값 대신 Tailwind 토큰을 사용하는지
+
+        [접근성]
+        - 인터랙티브 요소에 aria 속성이나 적절한 role이 있는지
+        - 이미지 alt 텍스트가 의미 있는 내용으로 작성되어 있는지
+
+    - path: "src/hooks/**/*.ts"
+      instructions: |
+        [React Query (TanStack Query v5)]
+        - queryKey가 배열 형식이고 모든 의존성(파라미터)을 포함하는지
+        - enabled 옵션이 의존성이 있는 쿼리에 적절히 사용되는지 (예: shopId가 없을 때 쿼리 비활성화)
+        - staleTime / gcTime 설정이 데이터 특성에 맞게 설정되어 있는지
+        - useMutation 후 관련 queryKey를 invalidateQueries로 갱신하는지
+        - isLoading / isError 상태가 호출부에서 처리될 수 있도록 반환되는지
+        - select 옵션으로 응답 데이터를 가공할 때 불필요한 재계산이 없는지
+
+        [커스텀 Hook 설계]
+        - hook 이름이 use 접두사를 따르는지
+        - hook이 단일 책임을 가지는지 (너무 많은 상태나 사이드이펙트를 하나의 hook에 집어넣지 않는지)
+        - hook 내부에서 직접 axios 호출 대신 별도 fetcher 함수를 분리했는지
+
+    - path: "**/*.ts"
+      instructions: |
+        - any / unknown 타입을 남용하지 않는지, 구체적인 타입으로 좁힐 수 있는지
+        - 함수의 파라미터와 반환 타입이 명시되어 있는지
+        - 유니온 타입보다 discriminated union이 적합한 경우는 없는지
+        - API 응답 타입이 실제 스펙과 일치하는지, 옵셔널 처리가 적절한지
+        - 유틸 함수가 순수 함수로 작성되어 테스트하기 쉬운 구조인지
+        - 타입 단언(as)을 불필요하게 사용하지 않는지
+
+chat:
+  auto_reply: true
