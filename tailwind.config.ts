@@ -15,7 +15,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Spoqa Han Sans Neo", "sans-serif"],
+        sans: ["var(--font-sans)", "sans-serif"],
       },
       fontSize: {
         "12-regular": ["0.75rem", { fontWeight: "400" }],
