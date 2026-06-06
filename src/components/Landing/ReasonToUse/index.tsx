@@ -17,8 +17,8 @@ const ReasonToUse = () => {
               key={reason.id}
               className="rounded-xl border bg-white px-18 py-24 text-center transition hover:shadow-lg"
             >
-              <div className="bg-secondary inline-flex items-center rounded-full p-16">
-                <reason.icon className="h-32 w-32 text-primary" />
+              <div className="inline-flex items-center rounded-full bg-secondary p-16">
+                <reason.icon className="h-32 w-32 text-primary" aria-hidden />
               </div>
               <h3 className="mb-8 mt-18 text-18-bold">{reason.title}</h3>
               <p className="text-16-regular">{reason.description}</p>

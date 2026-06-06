@@ -20,7 +20,7 @@ const FAQ = () => {
         </div>
         <div className="mt-30">
           {FAQS.map((faq) => (
-            <FAQItem key={faq.id} faq={faq} isOpen={openId === faq.id} onClick={() => handleToggle(faq.id)} />
+            <FAQItem key={faq.id} id={faq.id} faq={faq} isOpen={openId === faq.id} onClick={() => handleToggle(faq.id)} />
           ))}
         </div>
       </div>

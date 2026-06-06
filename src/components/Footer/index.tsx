@@ -51,7 +51,7 @@ const Footer = () => {
               <h3 className="text-12-bold text-gray-60 mb-12">SUPPORT</h3>
               <ul className="flex flex-col gap-8 text-12-regular">
                 <li>
-                  <Link href="" className="hover:text-gray-80 text-gray-50 transition-colors">
+                  <Link href="#" className="hover:text-gray-80 text-gray-50 transition-colors">
                     Privacy Policy
                   </Link>
                 </li>
@@ -61,7 +61,7 @@ const Footer = () => {
 
           <ul className="flex gap-16 text-gray-40 tablet:justify-end">
             <li className="transition-colors hover:text-gray-50">
-              <Link href="" aria-label="contact email">
+              <Link href="#" aria-label="contact email">
                 <IcEnvelope className="h-24 w-24" />
               </Link>
             </li>

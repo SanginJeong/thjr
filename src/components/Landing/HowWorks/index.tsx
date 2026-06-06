@@ -15,8 +15,8 @@ const HowWorks = () => {
           {STEPS.map((step, i) => (
             <div key={step.id} className="relative">
               <div className="flex flex-col items-center gap-12 text-center">
-                <div className="bg-secondary mb-4 flex items-center justify-center rounded-full p-16">
-                  <step.icon className="h-32 w-32 text-primary" />
+                <div className="mb-4 flex items-center justify-center rounded-full bg-secondary p-16">
+                  <step.icon className="h-32 w-32 text-primary" aria-hidden />
                 </div>
                 <h3 className="text-18-bold">{step.title}</h3>
                 <p className="text-muted-foreground text-sm">{step.description}</p>
