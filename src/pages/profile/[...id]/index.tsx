@@ -2,7 +2,7 @@ import Head from "next/head";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getCookieValue } from "@/utils/getCookie";
-import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/user/useGetMyInfoQuery";
+import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import ProfileSection from "../_components/Profile/ProfileDetail/ProfileSection";
 import SkeletonUI from "@/components/Skeleton";
 import Layout from "@/components/Layout";
@@ -98,21 +98,21 @@ const ProfileDetail = ({ userId }: InferGetServerSidePropsType<typeof getServerS
         <meta name="description" content="내 프로필과 지원 내역을 확인하세요." />
       </Head>
       <div>
-      <ProfileSection item={userInfo.item} />
-      {count === 0 ? (
-        <EmptyApplicationLog />
-      ) : (
-        <ApplicationLogSection
-          items={items}
-          limit={limit}
-          count={count}
-          hasNext={hasNext}
-          activePage={currentPage}
-          onPageChange={handlePageChange}
-          handleApplicationClick={handleApplicationClick}
-        />
-      )}
-    </div>
+        <ProfileSection item={userInfo.item} />
+        {count === 0 ? (
+          <EmptyApplicationLog />
+        ) : (
+          <ApplicationLogSection
+            items={items}
+            limit={limit}
+            count={count}
+            hasNext={hasNext}
+            activePage={currentPage}
+            onPageChange={handlePageChange}
+            handleApplicationClick={handleApplicationClick}
+          />
+        )}
+      </div>
     </>
   );
 };

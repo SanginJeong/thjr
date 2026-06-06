@@ -5,7 +5,7 @@ import axios from "axios";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import MessageModal from "@/components/Modal/MessageModal";
-import { useLoginQuery, LoginRequest } from "@/hooks/api/user/useLoginQuery";
+import { useLoginQuery, LoginRequest } from "@/hooks/api/auth/useLoginQuery";
 import Logo from "@/assets/svgs/logo-md.svg";
 
 const inputClass = "h-58 w-full";
@@ -83,67 +83,67 @@ const Signin = () => {
         <meta name="description" content="더줄게에 로그인하세요." />
       </Head>
       <div className="mx-auto mt-[15%] w-350">
-      <Link href="/">
-        <Logo className="text-green-60 mx-auto mb-40 w-248" />
-      </Link>
-      <form method="post" onSubmit={handleSigninSubmit}>
-        <div className="mb-28">
-          <label className={labelClass} htmlFor="email">
-            이메일
-          </label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            className={inputClass}
-            onChange={handleLoginDataChange}
-            onBlur={handleBlur}
-            errorMsg={errorMsg.email}
-            autoComplete="on"
-            aria-label="이메일 입력"
-          />
-        </div>
-        <div className="mb-28">
-          <label className={labelClass} htmlFor="password">
-            비밀번호
-          </label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            className={inputClass}
-            onChange={handleLoginDataChange}
-            onBlur={handleBlur}
-            errorMsg={errorMsg.password}
-            aria-label="비밀번호 입력"
-          />
-        </div>
-        <div className="mb-20">
-          <Button status="filled" className={buttonClass} type="submit" disabled={isPending} aria-label="로그인 버튼">
-            로그인 하기
-          </Button>
-        </div>
-      </form>
-      <div className="flex justify-center gap-10">
-        <p className="text-center">회원이 아니신가요?</p>
-        <Link href="/signup" aria-label="회원가입하기 링크" className="text-blue-20 underline">
-          회원가입하기
+        <Link href="/">
+          <Logo className="mx-auto mb-40 w-248 text-green-60" />
         </Link>
+        <form method="post" onSubmit={handleSigninSubmit}>
+          <div className="mb-28">
+            <label className={labelClass} htmlFor="email">
+              이메일
+            </label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              className={inputClass}
+              onChange={handleLoginDataChange}
+              onBlur={handleBlur}
+              errorMsg={errorMsg.email}
+              autoComplete="on"
+              aria-label="이메일 입력"
+            />
+          </div>
+          <div className="mb-28">
+            <label className={labelClass} htmlFor="password">
+              비밀번호
+            </label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              className={inputClass}
+              onChange={handleLoginDataChange}
+              onBlur={handleBlur}
+              errorMsg={errorMsg.password}
+              aria-label="비밀번호 입력"
+            />
+          </div>
+          <div className="mb-20">
+            <Button status="filled" className={buttonClass} type="submit" disabled={isPending} aria-label="로그인 버튼">
+              로그인 하기
+            </Button>
+          </div>
+        </form>
+        <div className="flex justify-center gap-10">
+          <p className="text-center">회원이 아니신가요?</p>
+          <Link href="/signup" aria-label="회원가입하기 링크" className="text-blue-20 underline">
+            회원가입하기
+          </Link>
+        </div>
+        <MessageModal
+          isOpen={isOpen}
+          message={modalMessage}
+          onClose={handleClose}
+          footers={[
+            {
+              buttonText: "닫기",
+              onClick: handleClose,
+              style: "lined",
+              className: "w-80 h-38",
+            },
+          ]}
+        />
       </div>
-      <MessageModal
-        isOpen={isOpen}
-        message={modalMessage}
-        onClose={handleClose}
-        footers={[
-          {
-            buttonText: "닫기",
-            onClick: handleClose,
-            style: "lined",
-            className: "w-80 h-38",
-          },
-        ]}
-      />
-    </div>
     </>
   );
 };

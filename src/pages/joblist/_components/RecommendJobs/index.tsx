@@ -1,7 +1,7 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Post from "@/components/Post";
 import { getNoticesResponse } from "@/hooks/api/notice/useGetNoticesQuery";
-import { GetMyInfoResponse } from "@/hooks/api/user/useGetMyInfoQuery";
+import { GetMyInfoResponse } from "@/hooks/api/auth/useGetMyInfoQuery";
 import { SeoulAddress } from "@/types/global";
 import Link from "next/link";
 import React from "react";

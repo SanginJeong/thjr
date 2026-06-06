@@ -8,7 +8,7 @@ import { getCookieValue } from "@/utils/getCookie";
 import { isStartTimePassed } from "@/utils/formatTime";
 import { addRecentViewedJob } from "@/utils/recentList";
 import { useGetUserApplicationsQuery } from "@/hooks/api/application/useGetUserApplicationsQuery";
-import { useGetMyInfoQuery } from "@/hooks/api/user/useGetMyInfoQuery";
+import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import { usePutShopApplicationQuery } from "@/hooks/api/application/usePutShopApplicationQuery";
 import { usePostShopApplicationQuery } from "@/hooks/api/application/usePostShopApplicationQuery";
 import {

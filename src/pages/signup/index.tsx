@@ -6,7 +6,7 @@ import axios from "axios";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import MessageModal from "@/components/Modal/MessageModal";
-import { SignupRequest, useSignupQuery } from "@/hooks/api/user/useSignupQuery";
+import { SignupRequest, useSignupQuery } from "@/hooks/api/auth/useSignupQuery";
 import { UserType } from "@/types/global";
 import Logo from "@/assets/svgs/logo-md.svg";
 import IcCheck from "@/assets/svgs/ic_check.svg";

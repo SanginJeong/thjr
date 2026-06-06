@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import IcPhone from "@/assets/svgs/ic_phone.svg";
 import IcAddress from "@/assets/svgs/ic_address.svg";
 import Button from "@/components/Button";
-import { GetMyInfoResponse } from "@/hooks/api/user/useGetMyInfoQuery";
+import { GetMyInfoResponse } from "@/hooks/api/auth/useGetMyInfoQuery";
 
 interface Props {
   item: GetMyInfoResponse["item"];

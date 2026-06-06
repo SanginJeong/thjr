@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import { LoginResponse } from "@/hooks/api/user/useLoginQuery";
-import { GetMyInfoResponse } from "@/hooks/api/user/useGetMyInfoQuery";
+import { LoginResponse } from "@/hooks/api/auth/useLoginQuery";
+import { GetMyInfoResponse } from "@/hooks/api/auth/useGetMyInfoQuery";
 const NEXT_PUBLIC_BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 export default async function Handler(req: NextApiRequest, res: NextApiResponse) {

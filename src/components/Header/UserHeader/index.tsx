@@ -2,9 +2,8 @@ import IcNoti from "@/assets/svgs/ic_notification.svg";
 import Link from "next/link";
 import { UserType } from "@/types/global";
 import { cn } from "@/utils";
-import { useLogoutQuery } from "@/hooks/api/user/useLogoutQuery";
+import { useLogoutQuery } from "@/hooks/api/auth/useLogoutQuery";
 import { useEffect, useRef, useState } from "react";
-import { getCookieValue } from "@/utils/getCookie";
 import NotificationWrapper from "@/components/NotificationWrapper";
 import { useGetUserAlertsQuery } from "@/hooks/api/alert/useGetUserAlertsQuery";
 
@@ -65,15 +64,12 @@ const UserHeader = () => {
   const btnRef = useRef<HTMLButtonElement>(null);
 
   const { data: alertData } = useGetUserAlertsQuery({ userId, options: { enabled: !!userId } });
-  const { mutateAsync: postLogout } = useLogoutQuery();
+  const { logout } = useLogoutQuery();
 
   const hasUnread = alertData?.items?.some((i) => !i.item.read) ?? false;
 
-  const handleLogoutClick = async () => {
-    await postLogout();
-    setUserId("");
-    setUserType(null);
-    setShopId("");
+  const handleLogoutClick = () => {
+    logout();
   };
 
   const handleNotiToggle = () => {
@@ -84,9 +80,9 @@ const UserHeader = () => {
   };
 
   useEffect(() => {
-    const id = getCookieValue(document.cookie, "userId") || "";
-    const type = getCookieValue(document.cookie, "userType");
-    const shop = getCookieValue(document.cookie, "shopId") || "";
+    const id = localStorage.getItem("userId") || "";
+    const type = localStorage.getItem("userType");
+    const shop = localStorage.getItem("shopId") || "";
     setUserId(id);
     setShopId(shop);
 
@@ -95,7 +91,7 @@ const UserHeader = () => {
     } else {
       setUserType(null);
     }
-  }, [userId, userType, shopId]);
+  }, []);
 
   if (!userId) {
     return (

@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import ListPagination from "@/components/ListPagination";
 import Post from "@/components/Post";
 import { getNoticesRequest, useGetNoticesQuery } from "@/hooks/api/notice/useGetNoticesQuery";
-import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/user/useGetMyInfoQuery";
+import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import { NoticeSort, SeoulAddress } from "@/types/global";
 import Link from "next/link";
 import { useRouter } from "next/router";
