@@ -17,8 +17,8 @@ jobs:
 
       - run: npm ci
 
-      - name: Type Check (app/ only)
-        run: npx tsc --noEmit --project tsconfig.ci.json
+      - name: Type Check
+        run: npx tsc --noEmit
 
       - name: Lint
         run: npm run lint
