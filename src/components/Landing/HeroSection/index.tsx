@@ -6,7 +6,7 @@ const HeroSection = () => {
   const { data } = useGetNoticesQuery();
   const targetCount = data?.count || 0;
   return (
-    <section id="hero-section" className="bg-secondary mt-54 px-16 py-64">
+    <section id="hero-section" className="mt-54 bg-secondary px-16 py-64">
       <div className="mx-auto max-w-3xl">
         <div className="flex flex-col items-center gap-16">
           <h1 className="text-center text-48 font-bold">
@@ -28,7 +28,7 @@ const HeroSection = () => {
             <div className="text-28-bold">
               총{" "}
               <Link href="/joblist">
-                <span className="text-38 text-primary">
+                <span aria-live="polite" className="text-38 text-primary">
                   <CountUp start={0} end={targetCount} duration={1.5} separator="," />
                 </span>
               </Link>

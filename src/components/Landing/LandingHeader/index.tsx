@@ -1,7 +1,6 @@
 import Logo from "@/assets/svgs/logo-md.svg";
 import Button from "@/components/Button";
 import { useLogoutQuery } from "@/hooks/api/auth/useLogoutQuery";
-import { getCookieValue } from "@/utils/getCookie";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
