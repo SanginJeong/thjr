@@ -3,7 +3,7 @@ import Link from "next/link";
 import NotificationWrapper from "@/components/NotificationWrapper";
 import { cn } from "@/utils";
 import { useLogoutQuery } from "@/hooks/api/auth/useLogoutQuery";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGetUserAlertsQuery } from "@/hooks/api/alert/useGetUserAlertsQuery";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -56,18 +56,19 @@ const GuestMenu = () => {
 };
 
 const UserHeader = () => {
-  const { userId, userType, isMounted } = useAuth();
+  const { userId, userType } = useAuth();
+  const [isMounted, setIsMounted] = useState(false);
   const { logout } = useLogoutQuery();
   const { data: alertData } = useGetUserAlertsQuery({ userId, options: { enabled: !!userId } });
 
   const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const btnRef = useRef<HTMLButtonElement>(null);
 
   const hasUnread = alertData?.items?.some((i) => !i.item.read) ?? false;
-
-  const handleLogoutClick = () => {
-    logout();
-  };
 
   const handleNoticeToggle = () => {
     setIsNoticeOpen((prev) => !prev);
@@ -99,7 +100,7 @@ const UserHeader = () => {
           </li>
         )}
         <li>
-          <button className={linkStyle} onClick={handleLogoutClick}>
+          <button className={linkStyle} onClick={logout}>
             로그아웃
           </button>
         </li>
