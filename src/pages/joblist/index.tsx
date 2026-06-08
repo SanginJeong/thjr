@@ -19,8 +19,9 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
   const jobDataApiParams: getNoticesRequest = { offset, limit, sort, ...filterConditions };
 
-  if (sort === "time") {
-    jobDataApiParams.startsAtGte = new Date(Date.now() + 10000).toISOString().split(".")[0] + "Z";
+  const startsAtGte = sort === "time" ? new Date(Date.now() + 10000).toISOString().split(".")[0] + "Z" : undefined;
+  if (startsAtGte) {
+    jobDataApiParams.startsAtGte = startsAtGte;
   }
 
   const queryClient = new QueryClient();
@@ -33,11 +34,12 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
+      startsAtGte: startsAtGte ?? null,
     },
   };
 };
 
-const JobList = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const JobList = ({ startsAtGte }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const { query } = router;
   const page = Number(query.page) || 1;
@@ -49,11 +51,8 @@ const JobList = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   const keyword = Array.isArray(query.keyword) ? query.keyword[0] : query.keyword || "";
   const jobDataApiParams: getNoticesRequest = { offset, limit, sort, ...filterConditions };
 
-  if (sort === "time") {
-    const tenSecondsLater = new Date(Date.now() + 10000).toISOString().split(".")[0] + "Z";
-    if (!jobDataApiParams.startsAtGte || jobDataApiParams.startsAtGte < tenSecondsLater) {
-      jobDataApiParams.startsAtGte = tenSecondsLater;
-    }
+  if (sort === "time" && startsAtGte) {
+    jobDataApiParams.startsAtGte = startsAtGte;
   }
 
   const handleApplyFilter = (newFilters: getNoticesRequest) => {
