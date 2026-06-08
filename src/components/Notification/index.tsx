@@ -1,13 +1,14 @@
 import IcClose from "@/assets/svgs/ic_close.svg";
 import NotificationItem from "./NotificationItem";
 import LoadingSpinner from "../LoadingSpinner";
+import SkeletonUI from "../Skeleton";
+
 import { useEffect, useState } from "react";
 import { cn } from "@/utils";
 import { GetUserAlertsResponse, useGetUserAlertsQuery } from "@/hooks/api/alert/useGetUserAlertsQuery";
 import { usePutUserAlertsQuery } from "@/hooks/api/alert/usePutUserAlertsQuery";
-import { getCookieValue } from "@/utils/getCookie";
 import { useQueryClient } from "@tanstack/react-query";
-import SkeletonUI from "../Skeleton";
+import { useAuth } from "@/hooks/useAuth";
 
 export type UserAlertItem = GetUserAlertsResponse["items"][number]["item"];
 
@@ -18,7 +19,7 @@ interface NotificationProps {
 const Notification = ({ onClose, className }: NotificationProps) => {
   const queryClient = useQueryClient();
 
-  const [userId, setUserId] = useState("");
+  const { userId } = useAuth();
   const [alerts, setAlerts] = useState<UserAlertItem[]>([]);
   const [isAllRead, setIsAllRead] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -45,10 +46,6 @@ const Notification = ({ onClose, className }: NotificationProps) => {
   useEffect(() => {
     setIsAllRead(!isLoading && alerts.length === 0);
   }, [alerts.length, isLoading]);
-  useEffect(() => {
-    const userCookieId = getCookieValue(document.cookie, "userId") || "";
-    setUserId(userCookieId);
-  }, []);
 
   useEffect(() => {
     if (userId) {
