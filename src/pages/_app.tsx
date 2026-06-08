@@ -6,6 +6,7 @@ import { NextPage } from "next";
 import { ReactNode } from "react";
 import { ModalProvider } from "@/hooks/useModal";
 import { Noto_Sans_KR } from "next/font/google";
+import { AuthContextProvider } from "@/hooks/useAuth";
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
@@ -30,15 +31,18 @@ export default function App({ Component, pageProps }: AppProps & { Component: Ne
         },
       }),
   );
+
   const getLayout = Component.getLayout ?? ((page: ReactNode) => page);
   return (
     <div className={notoSansKR.variable}>
       <QueryClientProvider client={queryClient}>
-        <ModalProvider>
-          <HydrationBoundary state={pageProps.dehydratedState}>
-            {getLayout(<Component {...pageProps} />)}
-          </HydrationBoundary>
-        </ModalProvider>
+        <AuthContextProvider>
+          <ModalProvider>
+            <HydrationBoundary state={pageProps.dehydratedState}>
+              {getLayout(<Component {...pageProps} />)}
+            </HydrationBoundary>
+          </ModalProvider>
+        </AuthContextProvider>
       </QueryClientProvider>
     </div>
   );
