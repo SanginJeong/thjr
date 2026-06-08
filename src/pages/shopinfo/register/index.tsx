@@ -27,16 +27,13 @@ const RegisterJobinfo = () => {
       router.replace("/joblist");
       return;
     }
-  }, [userId, userType, router]);
-
-  useEffect(() => {
     if (existingShopId) {
       openModal("confirm", "이미 등록된 가게가 있습니다.", () => router.replace(`/shopinfo/${existingShopId}`), {
         closeOnOverlayClick: false,
         closeOnEsc: false,
       });
     }
-  }, [existingShopId, openModal, router]);
+  }, [userId, userType, existingShopId, openModal, router]);
 
   const handleSubmit = (data: FormData) => {
     if (!data.category || !data.address1) {

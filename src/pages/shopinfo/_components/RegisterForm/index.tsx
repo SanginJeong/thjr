@@ -207,7 +207,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isPending, submitLabel }: Regis
         </label>
         <Button
           type="submit"
-          // disabled={isPending || hasError || isRequiredInputEmpty}
+          disabled={isPending || hasError || isRequiredInputEmpty}
           status="filled"
           className="m-auto h-48 tablet:w-312"
         >

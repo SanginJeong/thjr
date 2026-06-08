@@ -32,7 +32,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
   return {
     props: {
-      dehydrateState: dehydrate(queryClient),
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };
@@ -57,11 +57,13 @@ const JobList = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   }
 
   const handleApplyFilter = (newFilters: getNoticesRequest) => {
+    const filterKeys = Object.keys(newFilters);
     const cleanFilters = Object.fromEntries(
-      Object.entries(newFilters).filter(([, v]) => v !== null && v !== ""),
+      Object.entries(newFilters).filter(([, v]) => v !== null && v !== "" && !(Array.isArray(v) && v.length === 0)),
     ) as getNoticesRequest;
+    const baseQuery = Object.fromEntries(Object.entries(query).filter(([k]) => !filterKeys.includes(k)));
     router.push(
-      { pathname: router.pathname, query: { ...query, ...cleanFilters, page: 1 } },
+      { pathname: router.pathname, query: { ...baseQuery, ...cleanFilters, page: 1 } },
       undefined,
       { shallow: true },
     );
