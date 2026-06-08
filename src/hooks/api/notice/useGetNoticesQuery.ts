@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, NoticeItem, NoticeSort, ShopItem } from "@/types/global";
-import qs from 'qs'
-import axios from "axios";
+import qs from "qs";
+import apiInstance from "@/lib/axios";
 
 export interface getNoticesRequest {
   offset?: number;
   limit?: number;
-  address?: string | string[];  
+  address?: string | string[];
   keyword?: string;
   startsAtGte?: string;
   hourlyPayGte?: number;
@@ -32,9 +32,10 @@ export interface getNoticesResponse {
   links: Link[];
 }
 
-const getNotices = async (params: getNoticesRequest): Promise<getNoticesResponse> => {
-  const response = await axios.get("/api/proxy/notices", { params,
-    paramsSerializer: params => qs.stringify(params, {arrayFormat: 'repeat'})
+export const getNotices = async (params: getNoticesRequest): Promise<getNoticesResponse> => {
+  const response = await apiInstance.get("/notices", {
+    params,
+    paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
   });
   return response.data;
 };
