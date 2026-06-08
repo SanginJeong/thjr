@@ -8,6 +8,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "bootcamp-project-api.s3.ap-northeast-2.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
   //svgr 설정코드 6~27줄

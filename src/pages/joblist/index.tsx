@@ -1,90 +1,68 @@
 import Head from "next/head";
 import Layout from "@/components/Layout";
-import ListPagination from "@/components/ListPagination";
-import Post from "@/components/Post";
-import { getNoticesRequest, useGetNoticesQuery } from "@/hooks/api/notice/useGetNoticesQuery";
-import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
-import { NoticeSort, SeoulAddress } from "@/types/global";
-import Link from "next/link";
+import { getNotices, getNoticesRequest } from "@/hooks/api/notice/useGetNoticesQuery";
+import { NoticeSort } from "@/types/global";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getCookieValue } from "@/utils/getCookie";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
-import SelectBar from "./_components/SelectBar";
 import RecommendJobs from "./_components/RecommendJobs";
-import SkeletonUI from "@/components/Skeleton";
+import JobListSection from "./_components/JobListSection";
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const cookie = context.req.headers.cookie;
-  const userId = getCookieValue(cookie, "userId");
+  const query = context.query;
+
+  const page = Number(query.page) || 1;
+  const sort = (query.sort as NoticeSort) || "time";
+  const limit = 6;
+  const offset = (page - 1) * limit;
+  const { page: _page, sort: _sort, ...filterConditions } = query;
+
+  const jobDataApiParams: getNoticesRequest = { offset, limit, sort, ...filterConditions };
+
+  const startsAtGte = sort === "time" ? new Date(Date.now() + 10000).toISOString().split(".")[0] + "Z" : undefined;
+  if (startsAtGte) {
+    jobDataApiParams.startsAtGte = startsAtGte;
+  }
 
   const queryClient = new QueryClient();
-  if (userId) {
-    await queryClient.prefetchQuery({
-      queryKey: ["getMyInfo", userId],
-      queryFn: () => getMyInfo(userId),
-    });
-  }
+
+  await queryClient.prefetchQuery({
+    queryKey: ["getNotices", jobDataApiParams],
+    queryFn: () => getNotices(jobDataApiParams),
+  });
 
   return {
     props: {
-      userId: userId || null,
-      dehydrateState: dehydrate(queryClient),
+      dehydratedState: dehydrate(queryClient),
+      startsAtGte: startsAtGte ?? null,
     },
   };
 };
 
-const JobList = ({ userId }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const JobList = ({ startsAtGte }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const { query } = router;
   const page = Number(query.page) || 1;
   const sort = (query.sort as NoticeSort) || "time";
   const limit = 6;
   const offset = (page - 1) * limit;
-  const activePage = page;
   const { page: _page, sort: _sort, ...filterConditions } = query;
 
-  const keyword = Array.isArray(router.query.keyword) ? router.query.keyword[0] : router.query.keyword || "";
+  const keyword = Array.isArray(query.keyword) ? query.keyword[0] : query.keyword || "";
   const jobDataApiParams: getNoticesRequest = { offset, limit, sort, ...filterConditions };
 
-  if (sort === "time") {
-    const tenSecondsLater = new Date(Date.now() + 10000).toISOString().split(".")[0] + "Z";
-    if (!jobDataApiParams.startsAtGte || jobDataApiParams.startsAtGte < tenSecondsLater) {
-      jobDataApiParams.startsAtGte = tenSecondsLater;
-    }
+  if (sort === "time" && startsAtGte) {
+    jobDataApiParams.startsAtGte = startsAtGte;
   }
 
-  const { data: jobData, isLoading, isError } = useGetNoticesQuery(jobDataApiParams);
-  const { data: userData, isLoading: isUserDataLoading } = useGetMyInfoQuery(userId ?? "", { enabled: !!userId });
-  const userAddress = userData?.item?.address;
-  const { data: recommendData, isLoading: isRecommendDataLoading } = useGetNoticesQuery(
-    {
-      offset: 0,
-      limit: 3,
-      sort: "pay",
-      address: userAddress,
-    },
-    {
-      enabled: !!userAddress,
-    },
-  );
-
-  const hasJobData = jobData?.items && jobData.items.length > 0;
-
   const handleApplyFilter = (newFilters: getNoticesRequest) => {
+    const filterKeys = Object.keys(newFilters);
     const cleanFilters = Object.fromEntries(
-      Object.entries(newFilters).filter(([_, v]) => v !== null && v !== ""),
+      Object.entries(newFilters).filter(([, v]) => v !== null && v !== "" && !(Array.isArray(v) && v.length === 0)),
     ) as getNoticesRequest;
+    const baseQuery = Object.fromEntries(Object.entries(query).filter(([k]) => !filterKeys.includes(k)));
     router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...query,
-          ...cleanFilters,
-          page: 1,
-        },
-      },
+      { pathname: router.pathname, query: { ...baseQuery, ...cleanFilters, page: 1 } },
       undefined,
       { shallow: true },
     );
@@ -92,13 +70,7 @@ const JobList = ({ userId }: InferGetServerSidePropsType<typeof getServerSidePro
 
   const handlePageChange = (pageNumber: number) => {
     router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...query,
-          page: pageNumber,
-        },
-      },
+      { pathname: router.pathname, query: { ...query, page: pageNumber } },
       undefined,
       { shallow: true },
     );
@@ -106,71 +78,11 @@ const JobList = ({ userId }: InferGetServerSidePropsType<typeof getServerSidePro
 
   const handleSortChange = (option: { value: string }) => {
     router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...query,
-          sort: option.value as NoticeSort,
-          page: 1,
-        },
-      },
+      { pathname: router.pathname, query: { ...query, sort: option.value as NoticeSort, page: 1 } },
       undefined,
       { shallow: true },
     );
   };
-
-  useEffect(() => {
-    if (isLoading) {
-      const timeOut = setTimeout(() => {
-        window.alert("네트워크 환경을 확인해 주세요.");
-        router.push("/");
-      }, 20000);
-      return () => clearTimeout(timeOut);
-    }
-  }, [isLoading, router]);
-
-  if (isLoading || isUserDataLoading || isRecommendDataLoading) {
-    return (
-      <div>
-        {(keyword.trim() === "" && userId === null) ||
-        (keyword.trim() === "" && userData?.item.type === "employee") ||
-        (keyword.trim() === "" && !!userData?.item?.address) ||
-        (keyword.trim() === "" && recommendData?.items && recommendData.items.length > 0) ? (
-          <div>
-            <SkeletonUI count={1} boxClassName="h-541" />
-          </div>
-        ) : null}
-        <div className="mb-40 mt-60">
-          <SkeletonUI
-            count={1}
-            boxClassName="h-30 gap-0 w-50 tablet:gap-4 tablet:h-40 tablet:w-150"
-            className="mx-auto flex justify-start mobile:max-w-375 tablet:max-w-678 tablet:justify-between desktop:max-w-964"
-          />
-        </div>
-        <div className="mx-auto mb-40 mt-42 px-12 mobile:max-w-375 tablet:max-w-678 tablet:px-0 desktop:max-w-964">
-          <SkeletonUI
-            count={6}
-            className="grid grid-cols-2 gap-8 desktop:grid-cols-3 desktop:gap-14"
-            boxClassName="h-261 w-171 flex-col rounded-xl border border-gray-20 bg-white p-12 tablet:h-361 tablet:w-332 tablet:p-16 desktop:h-348 desktop:w-312"
-          />
-          <SkeletonUI count={1} boxClassName="mx-auto h-40 w-400 mb-80 tablet:mb-60" />
-        </div>
-        <div></div>
-      </div>
-    );
-  }
-  if (isError) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <div className="flex flex-col items-center text-20 font-bold tablet:text-28">
-          <p>공고를 불러오는 중에 오류가 발생했습니다.</p>
-          <Link href={"/"} className="text-primary">
-            메인페이지로 돌아가기
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -179,60 +91,16 @@ const JobList = ({ userId }: InferGetServerSidePropsType<typeof getServerSidePro
         <meta name="description" content="더줄게의 전체 공고를 확인하세요." />
       </Head>
       <div>
-        <RecommendJobs
-          userData={userData}
-          isUserDataLoading={isUserDataLoading}
-          recommendData={recommendData}
-          isRecommendDataLoading={isRecommendDataLoading}
+        <RecommendJobs keyword={keyword} />
+        <JobListSection
+          params={jobDataApiParams}
           keyword={keyword}
-          userId={userId}
+          activePage={page}
+          sort={sort}
+          onPageChange={handlePageChange}
+          onSortChange={handleSortChange}
+          onApplyFilter={handleApplyFilter}
         />
-        {hasJobData ? (
-          <div className="mx-auto mb-40 mt-60 px-12 mobile:max-w-375 tablet:max-w-678 tablet:px-0 desktop:max-w-964">
-            <div className="mb-16 flex flex-col items-start justify-start gap-16 tablet:mb-40 tablet:flex-row tablet:items-center tablet:justify-between">
-              {keyword && keyword.trim() !== "" ? (
-                <div className="text-20 font-bold tablet:text-28">
-                  <h2 className="inline text-primary">{keyword}</h2>에 대한 공고 목록
-                </div>
-              ) : (
-                <h2 className="text-20 font-bold tablet:text-28">전체 공고</h2>
-              )}
-              <SelectBar sort={sort} onSortChange={handleSortChange} onApplyFilter={handleApplyFilter} />
-            </div>
-            <div className="grid grid-cols-2 gap-8 desktop:grid-cols-3 desktop:gap-14">
-              {jobData?.items.map((data) => (
-                <Link key={data.item.id} href={`/jobinfo/${data.item.shop.item.id}/${data.item.id}`}>
-                  <Post
-                    {...data.item}
-                    {...data.item.shop.item}
-                    address={data.item.shop.item.address1 as SeoulAddress}
-                    id={data.item.shop.item.id}
-                  />
-                </Link>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="mx-auto mt-40 pl-12 mobile:max-w-350 tablet:max-w-678 tablet:pl-0 desktop:max-w-964">
-            <div className="flex justify-between">
-              <h2 className="text-20 font-bold tablet:text-28">전체 공고</h2>
-              <SelectBar sort={sort} onSortChange={handleSortChange} onApplyFilter={handleApplyFilter} />
-            </div>
-            <div className="mt-100 flex justify-center">
-              <p className="text-14 font-bold tablet:text-20">조건에 맞는 공고가 없습니다.</p>
-            </div>
-          </div>
-        )}
-
-        <div className="mb-80 tablet:mb-60">
-          <ListPagination
-            limit={limit}
-            count={jobData?.count ?? 0}
-            activePage={activePage}
-            hasNext={jobData?.hasNext ?? false}
-            onPageChange={handlePageChange}
-          />
-        </div>
       </div>
     </>
   );

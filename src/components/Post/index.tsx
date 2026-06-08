@@ -35,10 +35,7 @@ const Post = ({
   const isPassed = isStartTimePassed(startsAt);
   return (
     <section className={cn(postStyles.basic, (closed || isPassed) && postStyles.closed, className)}>
-      <button
-        className="flex w-full flex-grow flex-col justify-between gap-12 tablet:gap-20"
-        aria-label="Notice Detail"
-      >
+      <div className="flex w-full flex-grow flex-col justify-between gap-12 tablet:gap-20">
         <PostImage startsAt={startsAt} imageUrl={imageUrl} closed={closed} />
         <PostInfo
           name={name}
@@ -49,7 +46,7 @@ const Post = ({
           closed={closed}
         />
         <PostFooter hourlyPay={hourlyPay} originalHourlyPay={originalHourlyPay} closed={closed} isPassed={isPassed} />
-      </button>
+      </div>
     </section>
   );
 };
