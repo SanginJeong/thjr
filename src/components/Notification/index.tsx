@@ -49,13 +49,13 @@ const Notification = ({ onClose, className }: NotificationProps) => {
 
   useEffect(() => {
     if (userId) {
-      refetch().then(() => {
-        const unreadAlerts = alertData?.items?.map((i) => i.item).filter((alert) => !alert.read) ?? [];
+      refetch().then((result) => {
+        const unreadAlerts = result.data?.items?.map((i) => i.item).filter((alert) => !alert.read) ?? [];
         setAlerts(unreadAlerts);
         setIsLoading(false);
       });
     }
-  }, [userId, refetch, alertData]);
+  }, [userId, refetch]);
 
   if (isLoading) {
     return (
