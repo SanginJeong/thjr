@@ -5,12 +5,11 @@ import { useEffect } from "react";
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";
 import { usePostShopQuery } from "@/hooks/api/shop/usePostShopQuery";
-import useCheckAuth from "@/hooks/useCheckAuth";
 import { getCookieValue } from "@/utils/getCookie";
 import { useModal } from "@/hooks/useModal";
 
 const RegisterJobinfo = () => {
-  useCheckAuth("employer");
+  // useAuth
 
   const router = useRouter();
   const { mutate: postShop, isPending } = usePostShopQuery();
@@ -60,17 +59,17 @@ const RegisterJobinfo = () => {
         <meta name="description" content="내 가게를 등록하세요." />
       </Head>
       <div className="bg-gray-5">
-      <div className="m-auto max-w-1028 px-12 py-40 tablet:px-32 tablet:py-60">
-        <div className="relative">
-          <IcClose
-            onClick={handleCloseClick}
-            className="absolute right-0 top-0 w-24 hover:cursor-pointer tablet:w-32"
-          />
-          <h1 className="mb-32 text-20-bold text-black tablet:text-28-bold">내 가게</h1>
-          <RegisterForm onSubmit={handleSubmit} isPending={isPending} submitLabel="등록" />
+        <div className="m-auto max-w-1028 px-12 py-40 tablet:px-32 tablet:py-60">
+          <div className="relative">
+            <IcClose
+              onClick={handleCloseClick}
+              className="absolute right-0 top-0 w-24 hover:cursor-pointer tablet:w-32"
+            />
+            <h1 className="mb-32 text-20-bold text-black tablet:text-28-bold">내 가게</h1>
+            <RegisterForm onSubmit={handleSubmit} isPending={isPending} submitLabel="등록" />
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 };
