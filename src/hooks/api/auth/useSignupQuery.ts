@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { useMutation } from "@tanstack/react-query";
 import { Link, UserItem, UserType } from "@/types/global";
 import apiInstance from "@/lib/axios";
@@ -15,15 +14,12 @@ export interface SignupResponse {
 }
 
 const postSignup = async ({ email, password, type }: SignupRequest): Promise<SignupResponse> => {
-  const response = await apiInstance.post("/api/proxy/users", { email, password, type });
+  const response = await apiInstance.post("/users", { email, password, type });
   return response.data;
 };
 
 export const useSignupQuery = () => {
-  const router = useRouter();
   return useMutation({
     mutationFn: postSignup,
-    onSuccess: () => {},
-    onError: () => {},
   });
 };

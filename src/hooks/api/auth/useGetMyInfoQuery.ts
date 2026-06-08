@@ -13,7 +13,7 @@ export interface GetMyInfoResponse {
 }
 
 export const getMyInfo = async (userId: string): Promise<GetMyInfoResponse> => {
-  const response = await axios.get(`/api/proxy/users/${userId}`);
+  const response = await axios.get(`/users/${userId}`);
   return response.data;
 };
 
