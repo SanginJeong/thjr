@@ -5,6 +5,7 @@ type AuthContextType = {
   userId: string;
   userType: UserType | null;
   isMounted: boolean;
+  refreshAuth: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -14,15 +15,19 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [userType, setUserType] = useState<UserType | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
+  const refreshAuth = () => {
     const id = localStorage.getItem("userId");
     const type = localStorage.getItem("userType");
     setUserId(id || "");
     setUserType(type === "employee" || type === "employer" ? type : null);
+  };
+
+  useEffect(() => {
+    refreshAuth();
     setIsMounted(true);
   }, []);
 
-  return <AuthContext.Provider value={{ userId, userType, isMounted }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ userId, userType, isMounted, refreshAuth }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
