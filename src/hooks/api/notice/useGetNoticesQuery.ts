@@ -32,7 +32,7 @@ export interface getNoticesResponse {
   links: Link[];
 }
 
-const getNotices = async (params: getNoticesRequest): Promise<getNoticesResponse> => {
+export const getNotices = async (params: getNoticesRequest): Promise<getNoticesResponse> => {
   const response = await apiInstance.get("/notices", {
     params,
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
