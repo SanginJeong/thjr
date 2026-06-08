@@ -56,7 +56,9 @@ const JobListSection = ({
             className="grid grid-cols-2 gap-8 desktop:grid-cols-3 desktop:gap-14"
             boxClassName="h-261 w-171 flex-col rounded-xl border border-gray-20 bg-white p-12 tablet:h-361 tablet:w-332 tablet:p-16 desktop:h-348 desktop:w-312"
           />
-          <SkeletonUI count={1} boxClassName="mx-auto h-40 w-400 mb-80 tablet:mb-60" />
+        </div>
+        <div className="mb-80 tablet:mb-60">
+          <SkeletonUI count={1} boxClassName="mx-auto h-40 w-400" />
         </div>
       </div>
     );
