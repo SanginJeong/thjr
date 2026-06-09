@@ -18,6 +18,10 @@ const ListPagination = ({ limit = 5, count, hasNext, activePage=1, pagingMax = 7
   const [isNextBtn, isSetNextBtn] = useState(false);
 
   useEffect(() => {
+    setPage(activePage);
+  }, [activePage]);
+
+  useEffect(() => {
     if (count > limit * pagingMax) {
       isSetPrevBtn(true);
       isSetNextBtn(true);
