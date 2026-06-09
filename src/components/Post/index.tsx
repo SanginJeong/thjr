@@ -13,6 +13,7 @@ interface Props extends Omit<NoticeItem, "description"> {
   address: SeoulAddress;
   originalHourlyPay: number;
   className?: string;
+  priority?: boolean;
 }
 
 const postStyles = {
@@ -31,12 +32,13 @@ const Post = ({
   address,
   originalHourlyPay,
   className,
+  priority = false,
 }: Props) => {
   const isPassed = isStartTimePassed(startsAt);
   return (
     <section className={cn(postStyles.basic, (closed || isPassed) && postStyles.closed, className)}>
       <div className="flex w-full flex-grow flex-col justify-between gap-12 tablet:gap-20">
-        <PostImage startsAt={startsAt} imageUrl={imageUrl} closed={closed} />
+        <PostImage startsAt={startsAt} imageUrl={imageUrl} closed={closed} priority={priority} />
         <PostInfo
           name={name}
           address={address}

@@ -5,8 +5,6 @@ import SelectBar from "../SelectBar";
 import Link from "next/link";
 import { getNoticesRequest, useGetNoticesQuery } from "@/hooks/api/notice/useGetNoticesQuery";
 import { NoticeSort, SeoulAddress } from "@/types/global";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 
 interface JobListSectionProps {
   params: getNoticesRequest;
@@ -27,18 +25,7 @@ const JobListSection = ({
   onSortChange,
   onApplyFilter,
 }: JobListSectionProps) => {
-  const router = useRouter();
   const { data, isLoading, isError } = useGetNoticesQuery(params);
-
-  useEffect(() => {
-    if (isLoading) {
-      const timeOut = setTimeout(() => {
-        window.alert("네트워크 환경을 확인해 주세요.");
-        router.push("/");
-      }, 20000);
-      return () => clearTimeout(timeOut);
-    }
-  }, [isLoading, router]);
 
   if (isLoading) {
     return (
