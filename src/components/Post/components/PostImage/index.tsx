@@ -1,6 +1,6 @@
 import { isStartTimePassed } from "@/utils/formatTime";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const FALLBACK_IMAGE = "/images/img_shopdefault.jpg";
 
@@ -18,6 +18,10 @@ interface Props {
 const PostImage = ({ startsAt, imageUrl, closed, priority = false }: Props) => {
   const isPassed = isStartTimePassed(startsAt);
   const [src, setSrc] = useState(imageUrl || FALLBACK_IMAGE);
+
+  useEffect(() => {
+    setSrc(imageUrl || FALLBACK_IMAGE);
+  }, [imageUrl]);
 
   return (
     <div className="relative h-full w-full flex-[2]">

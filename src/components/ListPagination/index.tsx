@@ -39,8 +39,7 @@ const ListPagination = ({ limit = 5, count, hasNext, activePage=1, pagingMax = 7
   }, [limit, count, pagingMax, isPrevBtn, isNextBtn]);
 
   const handlePageChange = (pageNumber: number) => {
-    setPage(pageNumber); // 페이지 전환 시 현재 페이지 업데이트
-    onPageChange?.(pageNumber); // 부모에게 페이지 번호 전달
+    onPageChange?.(pageNumber);
   };
 
   const disabled = () => {
