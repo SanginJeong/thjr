@@ -21,5 +21,6 @@ export const useGetShopInfoQuery = (shopId: string) => {
   return useQuery({
     queryKey: ["getShopInfo", shopId],
     queryFn: () => getShopInfo(shopId),
+    enabled: !!shopId,
   });
 };

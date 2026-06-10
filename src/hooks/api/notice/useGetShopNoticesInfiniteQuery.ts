@@ -3,7 +3,7 @@ import { getShopNoticesRequest, getShopNotices } from "./useGetShopNoticesQuery"
 
 export const useGetShopNoticesInfiniteQuery = ({ shopId, limit = 6 }: Omit<getShopNoticesRequest, "offset">) => {
   return useInfiniteQuery({
-    queryKey: ["getShopNotices", shopId], 
+    queryKey: ["getShopNotices", shopId],
     queryFn: ({ pageParam = 0 }) => getShopNotices({ shopId, offset: pageParam, limit }),
     getNextPageParam: (lastPage) => {
       if (lastPage.hasNext) {
@@ -11,8 +11,8 @@ export const useGetShopNoticesInfiniteQuery = ({ shopId, limit = 6 }: Omit<getSh
       }
       return undefined;
     },
-    
-    initialPageParam: 0, 
+    initialPageParam: 0,
+    enabled: !!shopId,
   });
 };
     

@@ -10,16 +10,15 @@ interface ArticleProps {
   isLoading?: boolean;
   error?: boolean;
   bgColor: string;
+  shopId: string;
   noticeId: string;
   closed:boolean;
 }
 
-const JobInfoCard = ({ res, bgColor, noticeId, isLoading, closed, ...props }: ArticleProps) => {
-  //페이지 링크
-
+const JobInfoCard = ({ res, bgColor, shopId, noticeId, isLoading, closed, ...props }: ArticleProps) => {
   const router = useRouter();
   const onHandleClick = () => {
-    router.push(`/employer/jobinfo/${noticeId}/edit`); //공고편집하기로 가기
+    router.push(`/employer/shops/${shopId}/notices/${noticeId}/edit`);
   };
 
   if (!noticeId || isLoading) {
