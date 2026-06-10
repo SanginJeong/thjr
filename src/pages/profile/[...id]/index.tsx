@@ -1,8 +1,5 @@
 import Head from "next/head";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getCookieValue } from "@/utils/getCookie";
-import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
+import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import ProfileSection from "../_components/Profile/ProfileDetail/ProfileSection";
 import SkeletonUI from "@/components/Skeleton";
 import Layout from "@/components/Layout";
@@ -11,47 +8,12 @@ import { useGetUserApplicationsQuery } from "@/hooks/api/application/useGetUserA
 import { useState } from "react";
 import { useRouter } from "next/router";
 import EmptyApplicationLog from "../_components/Profile/ProfileDetail/EmptyApplicationLog";
-
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const cookie = context.req.headers.cookie;
-  const userId = getCookieValue(cookie, "userId");
-  const userType = getCookieValue(cookie, "userType");
-  const queryClient = new QueryClient();
-
-  if (!userId) {
-    return {
-      redirect: {
-        destination: "/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  if (userType !== "employee") {
-    return {
-      redirect: {
-        destination: `/shopinfo`,
-        permanent: false,
-      },
-    };
-  }
-
-  await queryClient.prefetchQuery({
-    queryKey: ["getMyInfo", userId],
-    queryFn: () => getMyInfo(userId),
-  });
-
-  return {
-    props: {
-      userId,
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
+import { useAuth } from "@/hooks/useAuth";
 
 const LIMIT = 5;
 
-const ProfileDetail = ({ userId }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ProfileDetail = () => {
+  const { userId } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const offset = (currentPage - 1) * LIMIT;
   const router = useRouter();

@@ -1,53 +1,15 @@
 import Head from "next/head";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
+import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import Layout from "@/components/Layout";
 import { ReactNode } from "react";
-import { getCookieValue } from "@/utils/getCookie";
 import SkeletonUI from "@/components/Skeleton";
 import Button from "@/components/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAuth } from "@/hooks/useAuth";
 
-const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const cookie = context.req.headers.cookie;
-  const userId = getCookieValue(cookie, "userId");
-  const userType = getCookieValue(cookie, "userType");
-  const queryClient = new QueryClient();
-
-  if (!userId) {
-    return {
-      redirect: {
-        destination: "/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  if (userType !== "employee") {
-    return {
-      redirect: {
-        destination: `/shopinfo`,
-        permanent: false,
-      },
-    };
-  }
-
-  await queryClient.prefetchQuery({
-    queryKey: ["getMyInfo", userId],
-    queryFn: () => getMyInfo(userId),
-  });
-
-  return {
-    props: {
-      userId,
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
-
-const Profile = ({ userId }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Profile = () => {
+  const { userId } = useAuth();
   const { data: userInfo, isPending } = useGetMyInfoQuery(userId);
 
   const router = useRouter();
@@ -96,5 +58,4 @@ Profile.getLayout = (page: ReactNode) => {
   return <Layout>{page}</Layout>;
 };
 
-export { getServerSideProps };
 export default Profile;
