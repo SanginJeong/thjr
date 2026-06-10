@@ -2,33 +2,28 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import RegisterForm, { FormData } from "../_components/RegisterForm";
 import { usePostShopNoticesQuery } from "@/hooks/api/notice/usePostShopNoticesQuery";
-import { useEffect, useState } from "react";
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";
-import { getCookieValue } from "@/utils/getCookie";
 import { useModal } from "@/hooks/useModal";
+import { useQueryClient } from "@tanstack/react-query";
 
 const RegisterJobinfo = () => {
-  // useAuth
-  const [shopId, setShopId] = useState("");
-
-  useEffect(() => {
-    const shopCookieId = getCookieValue(document.cookie, "shopId") || "";
-    setShopId(shopCookieId);
-  }, []);
-
   const router = useRouter();
-  const { mutate: postShopNotice, isPending } = usePostShopNoticesQuery();
+  const q = router.query;
+  const shopId = typeof q.shopId === "string" ? q.shopId : "";
 
+  const queryClient = useQueryClient();
+  const { mutate: postShopNotice, isPending } = usePostShopNoticesQuery();
   const { openModal, closeModal } = useModal();
 
   const handleSubmit = (data: FormData) => {
     postShopNotice(
-      { shopId, data },
+      { shopId: shopId, data },
       {
         onSuccess: (res) => {
           const notice_id = res.item.id;
-          openModal("confirm", "공고 등록이 완료되었습니다.", () => router.replace(`/employer/jobinfo/${notice_id}`), {
+          queryClient.invalidateQueries({ queryKey: ["getShopNotices", shopId] });
+          openModal("confirm", "공고 등록이 완료되었습니다.", () => router.replace(`/employer/shops/${shopId}/notices/${notice_id}`), {
             closeOnOverlayClick: false,
             closeOnEsc: false,
           });
@@ -41,7 +36,7 @@ const RegisterJobinfo = () => {
   };
 
   const handleCloseClick = () => {
-    openModal("action", "공고 등록을 취소하시겠습니까?", () => router.push(`/shopinfo/${shopId}`));
+    openModal("action", "공고 등록을 취소하시겠습니까?", () => router.push(`/employer/shops/${shopId}`));
   };
 
   return (
@@ -53,10 +48,14 @@ const RegisterJobinfo = () => {
       <div className="bg-gray-5">
         <div className="m-auto max-w-1028 px-12 py-40 tablet:px-32 tablet:py-60">
           <div className="relative">
-            <IcClose
+            <button
+              type="button"
               onClick={handleCloseClick}
-              className="absolute right-0 top-0 w-24 hover:cursor-pointer tablet:w-32"
-            />
+              aria-label="공고 등록 취소"
+              className="absolute right-0 top-0"
+            >
+              <IcClose className="w-24 tablet:w-32" />
+            </button>
             <h1 className="mb-32 text-20-bold text-black tablet:text-28-bold">공고 등록</h1>
             <RegisterForm onSubmit={handleSubmit} isPending={isPending} submitLabel="등록" />
           </div>

@@ -40,7 +40,5 @@ const putUserAlerts = async ({ userId, alertId }: PutUserAlertsRequest): Promise
 export const usePutUserAlertsQuery = () => {
   return useMutation({
     mutationFn: putUserAlerts,
-    onSuccess: (res) => console.log(res),
-    onError: (err) => console.log(err),
   });
 };

@@ -1,6 +1,6 @@
+import apiInstance from "@/lib/axios";
 import { Link, ShopItem, UserInfoItem, UserItem } from "@/types/global";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 export interface GetShopInfoResponse {
   item: ShopItem & {
@@ -13,7 +13,7 @@ export interface GetShopInfoResponse {
 }
 
 export const getShopInfo = async (shopId: string): Promise<GetShopInfoResponse> => {
-  const response = await axios.get(`/api/proxy/shops/${shopId}`);
+  const response = await apiInstance.get(`/shops/${shopId}`);
   return response.data;
 };
 
@@ -21,5 +21,6 @@ export const useGetShopInfoQuery = (shopId: string) => {
   return useQuery({
     queryKey: ["getShopInfo", shopId],
     queryFn: () => getShopInfo(shopId),
+    enabled: !!shopId,
   });
 };

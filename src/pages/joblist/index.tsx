@@ -61,27 +61,15 @@ const JobList = ({ startsAtGte }: InferGetServerSidePropsType<typeof getServerSi
       Object.entries(newFilters).filter(([, v]) => v !== null && v !== "" && !(Array.isArray(v) && v.length === 0)),
     ) as getNoticesRequest;
     const baseQuery = Object.fromEntries(Object.entries(query).filter(([k]) => !filterKeys.includes(k)));
-    router.push(
-      { pathname: router.pathname, query: { ...baseQuery, ...cleanFilters, page: 1 } },
-      undefined,
-      { shallow: true },
-    );
+    router.push({ pathname: router.pathname, query: { ...baseQuery, ...cleanFilters, page: 1 } });
   };
 
   const handlePageChange = (pageNumber: number) => {
-    router.push(
-      { pathname: router.pathname, query: { ...query, page: pageNumber } },
-      undefined,
-      { shallow: true },
-    );
+    router.push({ pathname: router.pathname, query: { ...query, page: pageNumber } }, undefined, { scroll: false });
   };
 
   const handleSortChange = (option: { value: string }) => {
-    router.push(
-      { pathname: router.pathname, query: { ...query, sort: option.value as NoticeSort, page: 1 } },
-      undefined,
-      { shallow: true },
-    );
+    router.push({ pathname: router.pathname, query: { ...query, sort: option.value as NoticeSort, page: 1 } });
   };
 
   return (

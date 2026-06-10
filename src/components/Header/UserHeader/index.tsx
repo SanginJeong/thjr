@@ -29,7 +29,7 @@ const userMenuItem = {
     },
     employer: {
       title: "내 가게",
-      href: "/shopinfo",
+      href: "/employer/shops",
     },
   },
   logout: {

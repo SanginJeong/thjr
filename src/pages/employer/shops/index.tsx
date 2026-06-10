@@ -1,26 +1,43 @@
 import Head from "next/head";
 import Button from "@/components/Button";
 import Layout from "@/components/Layout";
-import { getCookieValue } from "@/utils/getCookie";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 
 const ShopInfo = () => {
-  // useAuth
-
+  const { userId, userType } = useAuth();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  const { data, isPending } = useGetMyInfoQuery(userId);
+  const shopId = data?.item.shop?.item.id;
 
   const handleRegisterClick = () => {
-    router.push("/shopinfo/register");
+    router.push("/employer/shops/register");
   };
 
   useEffect(() => {
-    const shopId = getCookieValue(document.cookie, "shopId");
+    setMounted(true);
+  }, []);
 
-    if (shopId) {
-      router.push(`/shopinfo/${shopId}`);
+  useEffect(() => {
+    if (!mounted || isPending) {
+      return;
     }
-  }, [router]);
+    if (!userId || userType !== "employer") {
+      router.replace("/signin");
+      return;
+    }
+    if (shopId) {
+      router.replace(`/employer/shops/${shopId}`);
+    }
+  }, [mounted, isPending, userId, userType, shopId, router]);
+
+  if (!mounted || isPending || shopId) {
+    return null;
+  }
 
   return (
     <>

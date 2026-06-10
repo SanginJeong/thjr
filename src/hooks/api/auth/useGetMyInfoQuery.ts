@@ -21,6 +21,6 @@ export const useGetMyInfoQuery = (userId: string, options?: { enabled?: boolean 
   return useQuery({
     queryKey: ["getMyInfo", userId],
     queryFn: () => getMyInfo(userId),
-    enabled: options?.enabled ?? true,
+    enabled: !!userId && (options?.enabled ?? true),
   });
 };

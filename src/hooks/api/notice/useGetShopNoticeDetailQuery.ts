@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ApplicationItem, Link, NoticeItem, ShopItem } from "@/types/global";
-import axios from "axios";
+import apiInstance from "@/lib/axios";
 
 export interface GetShopNoticeDetailRequest {
   shopId: string;
@@ -24,7 +24,7 @@ export const getShopNoticeDetail = async ({
   shopId,
   noticeId,
 }: GetShopNoticeDetailRequest): Promise<GetShopNoticeDetailResponse> => {
-  const response = await axios.get(`/api/proxy/shops/${shopId}/notices/${noticeId}`);
+  const response = await apiInstance.get(`/shops/${shopId}/notices/${noticeId}`);
   return response.data;
 };
 
@@ -32,5 +32,6 @@ export const useGetShopNoticeDetailQuery = ({ shopId, noticeId }: GetShopNoticeD
   return useQuery({
     queryKey: ["getShopNoticeDetail", shopId, noticeId],
     queryFn: () => getShopNoticeDetail({ shopId, noticeId }),
+    enabled: !!shopId && !!noticeId,
   });
 };
