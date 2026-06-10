@@ -21,7 +21,5 @@ const postPresignedURL = async ({ name }: PostPresignedURLRequest): Promise<Post
 export const usePostPresignedURLQuery = () => {
   return useMutation({
     mutationFn: postPresignedURL,
-    onSuccess: (res) => console.log(res),
-    onError: (err) => console.log(err),
   });
 };

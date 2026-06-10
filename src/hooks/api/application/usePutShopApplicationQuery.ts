@@ -53,7 +53,6 @@ export const usePutShopApplicationQuery = (options?: {
       options?.onSuccess?.(res);
     },
     onError: (err) => {
-      console.error(err);
       options?.onError?.(err);
     },
   });

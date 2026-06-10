@@ -35,11 +35,5 @@ const putShopNoticeDetail = async ({
 export const usePutShopNoticeDetailQuery = () => {
   return useMutation({
     mutationFn: putShopNoticeDetail,
-    onSuccess: (res) => {
-      console.log(res);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
   });
 };

@@ -25,7 +25,5 @@ const putShopInfo = async ({ shopId, data }: PutShopInfoRequest): Promise<PutSho
 export const usePutShopInfoQuery = () => {
   return useMutation({
     mutationFn: putShopInfo,
-    onSuccess: (res) => console.log(res),
-    onError: (err) => console.log(err),
   });
 };

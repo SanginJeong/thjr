@@ -30,11 +30,5 @@ const postShopNotices = async ({ shopId, data }: PostShopNoticesRequest): Promis
 export const usePostShopNoticesQuery = () => {
   return useMutation({
     mutationFn: postShopNotices,
-    onSuccess: (res) => {
-      console.log(res);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
   });
 };

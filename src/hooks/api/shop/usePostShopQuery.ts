@@ -22,7 +22,5 @@ const postShop = async (data: PostShopRequest): Promise<PostShopResponse> => {
 export const usePostShopQuery = () => {
   return useMutation({
     mutationFn: postShop,
-    onSuccess: (res) => console.log(res),
-    onError: (err) => console.log(err),
   });
 };
