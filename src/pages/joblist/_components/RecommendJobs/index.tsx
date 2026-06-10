@@ -13,7 +13,7 @@ type RecommendJobsProps = {
 };
 
 const RecommendJobs = ({ keyword }: RecommendJobsProps) => {
-  const { userId } = useAuth();
+  const { userId, userType } = useAuth();
   const { data: userData, isLoading: isUserDataLoading } = useGetMyInfoQuery(userId ?? "", { enabled: !!userId });
 
   const userAddress = userData?.item?.address;
@@ -24,8 +24,8 @@ const RecommendJobs = ({ keyword }: RecommendJobsProps) => {
 
   const hasRecommendData = recommendData?.items && recommendData.items.length > 0;
   const hasUserAddress = !!userAddress;
-  const isEmployee = userData?.item?.type === "employee";
-  const isGuest = userData?.item?.type === undefined;
+  const isEmployee = userType === "employee";
+  const isGuest = !userId;
   const isKeywordEmpty = !keyword || keyword.trim() === "";
   const recommendShow = isKeywordEmpty && (isGuest || isEmployee);
 
