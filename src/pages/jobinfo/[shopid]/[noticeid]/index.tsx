@@ -1,10 +1,32 @@
 import Head from "next/head";
 import { ReactNode } from "react";
 import Layout from "@/components/Layout";
-import { useGetShopNoticeDetailQuery } from "@/hooks/api/notice/useGetShopNoticeDetailQuery";
+import { getShopNoticeDetail, useGetShopNoticeDetailQuery } from "@/hooks/api/notice/useGetShopNoticeDetailQuery";
 import JobDetail from "../../_components/jobdetail";
 import RecentList from "../../_components/recentlist";
 import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next";
+import { QueryClient, dehydrate } from "@tanstack/react-query";
+
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const shopId = context.params?.shopId as string;
+  const noticeId = context.params?.noticeId as string;
+
+  const queryClient = new QueryClient();
+
+  if (shopId && noticeId) {
+    await queryClient.prefetchQuery({
+      queryKey: ["getShopNoticeDetail", shopId, noticeId],
+      queryFn: () => getShopNoticeDetail({ shopId, noticeId }),
+    });
+  }
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
 
 const JobInfo = () => {
   const router = useRouter();
@@ -16,6 +38,7 @@ const JobInfo = () => {
   const noticeId = String(noticeURL);
 
   const { data: jobData, isPending } = useGetShopNoticeDetailQuery({ shopId, noticeId });
+
   return (
     <>
       <Head>
