@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import RegisterForm, { FormData } from "../_components/RegisterForm";
+import RegisterForm, { FormData } from "@/pages/employer/shops/_components/RegisterForm";
 import { useEffect } from "react";
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";
@@ -9,7 +9,7 @@ import { useModal } from "@/hooks/useModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 
-const RegisterJobinfo = () => {
+const RegisterShopPage = () => {
   const router = useRouter();
   const { userId, userType } = useAuth();
   const { openModal, closeModal } = useModal();
@@ -28,7 +28,7 @@ const RegisterJobinfo = () => {
       return;
     }
     if (existingShopId) {
-      openModal("confirm", "이미 등록된 가게가 있습니다.", () => router.replace(`/shopinfo/${existingShopId}`), {
+      openModal("confirm", "이미 등록된 가게가 있습니다.", () => router.replace(`/employer/shops/${existingShopId}`), {
         closeOnOverlayClick: false,
         closeOnEsc: false,
       });
@@ -45,7 +45,7 @@ const RegisterJobinfo = () => {
       {
         onSuccess: (res) => {
           const shopId = res.item.id;
-          openModal("confirm", "가게 등록이 완료되었습니다.", () => router.replace(`/shopinfo/${shopId}`), {
+          openModal("confirm", "가게 등록이 완료되었습니다.", () => router.replace(`/employer/shops/${shopId}`), {
             closeOnOverlayClick: false,
             closeOnEsc: false,
           });
@@ -58,7 +58,7 @@ const RegisterJobinfo = () => {
   };
 
   const handleCloseClick = () => {
-    openModal("action", "가게 등록을 취소하시겠습니까?", () => router.push("/shopinfo"));
+    openModal("action", "가게 등록을 취소하시겠습니까?", () => router.push("/employer/shops"));
   };
 
   if (!userId || userType !== "employer") {
@@ -87,7 +87,7 @@ const RegisterJobinfo = () => {
   );
 };
 
-export default RegisterJobinfo;
-RegisterJobinfo.getLayout = (page: React.ReactNode) => {
+export default RegisterShopPage;
+RegisterShopPage.getLayout = (page: React.ReactNode) => {
   return <Layout>{page}</Layout>;
 };

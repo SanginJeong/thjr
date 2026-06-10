@@ -15,7 +15,7 @@ const ShopInfo = () => {
   const shopId = data?.item.shop?.item.id;
 
   const handleRegisterClick = () => {
-    router.push("/shopinfo/register");
+    router.push("/employer/shops/register");
   };
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const ShopInfo = () => {
       return;
     }
     if (shopId) {
-      router.replace(`/shopinfo/${shopId}`);
+      router.replace(`/employer/shops/${shopId}`);
     }
   }, [mounted, userId, userType, shopId, router]);
 

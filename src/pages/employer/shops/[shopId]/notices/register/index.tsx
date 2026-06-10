@@ -1,34 +1,26 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import RegisterForm, { FormData } from "../_components/RegisterForm";
+import RegisterForm, { FormData } from "@/pages/employer/jobinfo/_components/RegisterForm";
 import { usePostShopNoticesQuery } from "@/hooks/api/notice/usePostShopNoticesQuery";
-import { useEffect, useState } from "react";
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";
-import { getCookieValue } from "@/utils/getCookie";
 import { useModal } from "@/hooks/useModal";
 
 const RegisterJobinfo = () => {
-  // useAuth
-  const [shopId, setShopId] = useState("");
-
-  useEffect(() => {
-    const shopCookieId = getCookieValue(document.cookie, "shopId") || "";
-    setShopId(shopCookieId);
-  }, []);
-
   const router = useRouter();
-  const { mutate: postShopNotice, isPending } = usePostShopNoticesQuery();
+  const { shopId } = router.query;
+  const shopIdStr = String(shopId);
 
+  const { mutate: postShopNotice, isPending } = usePostShopNoticesQuery();
   const { openModal, closeModal } = useModal();
 
   const handleSubmit = (data: FormData) => {
     postShopNotice(
-      { shopId, data },
+      { shopId: shopIdStr, data },
       {
         onSuccess: (res) => {
           const notice_id = res.item.id;
-          openModal("confirm", "공고 등록이 완료되었습니다.", () => router.replace(`/employer/jobinfo/${notice_id}`), {
+          openModal("confirm", "공고 등록이 완료되었습니다.", () => router.replace(`/employer/shops/${shopIdStr}/notices/${notice_id}`), {
             closeOnOverlayClick: false,
             closeOnEsc: false,
           });
@@ -41,7 +33,7 @@ const RegisterJobinfo = () => {
   };
 
   const handleCloseClick = () => {
-    openModal("action", "공고 등록을 취소하시겠습니까?", () => router.push(`/shopinfo/${shopId}`));
+    openModal("action", "공고 등록을 취소하시겠습니까?", () => router.push(`/employer/shops/${shopIdStr}`));
   };
 
   return (

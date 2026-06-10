@@ -15,17 +15,17 @@ import SkeletonUI from "@/components/Skeleton";
 
 const ShopInfoDetail = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const shopId = String(id);
+  const { shopId } = router.query;
+  const shopIdStr = String(shopId);
 
-  const { data: shopInfo, isLoading: shopInfoLoading } = useGetShopInfoQuery(shopId);
+  const { data: shopInfo, isLoading: shopInfoLoading } = useGetShopInfoQuery(shopIdStr);
 
   const {
     data: shopNotices,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetShopNoticesInfiniteQuery({ shopId, limit: 6 });
+  } = useGetShopNoticesInfiniteQuery({ shopId: shopIdStr, limit: 6 });
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -40,11 +40,11 @@ const ShopInfoDetail = () => {
   const hasShopNotices = shopNotices && shopNotices.pages[0].items.length > 0;
 
   const handleEditClick = () => {
-    router.push(`/shopinfo/${shopId}/edit`);
+    router.push(`/employer/shops/${shopIdStr}/edit`);
   };
 
   const handleRegisterClick = () => {
-    router.push("/employer/jobinfo/register");
+    router.push(`/employer/shops/${shopIdStr}/notices/register`);
   };
 
   if (shopInfoLoading) {
@@ -104,7 +104,7 @@ const ShopInfoDetail = () => {
               <div className="grid grid-cols-2 gap-8 desktop:grid-cols-3 desktop:gap-14">
                 {shopNotices.pages.flatMap((page) =>
                   page.items.map((notice) => (
-                    <Link key={notice.item.id} href={`/employer/jobinfo/${notice.item.id}`}>
+                    <Link key={notice.item.id} href={`/employer/shops/${shopIdStr}/notices/${notice.item.id}`}>
                       <Post
                         {...notice.item}
                         imageUrl={shopInfo?.item.imageUrl ?? ""}

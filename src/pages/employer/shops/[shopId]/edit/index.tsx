@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useGetShopInfoQuery } from "@/hooks/api/shop/useGetShopInfoQuery";
 import { usePutShopInfoQuery } from "@/hooks/api/shop/usePutShopInfoQuery";
-import RegisterForm, { FormData } from "@/pages/shopinfo/_components/RegisterForm";
+import RegisterForm, { FormData } from "@/pages/employer/shops/_components/RegisterForm";
 import { useEffect } from "react";
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";
@@ -13,11 +13,11 @@ import { useAuth } from "@/hooks/useAuth";
 
 const EditShopPage = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { shopId } = router.query;
   const { userId } = useAuth();
-  const shopId = String(id);
+  const shopIdStr = String(shopId);
   const queryClient = new QueryClient();
-  const { data: shopData, isPending: isGetPending } = useGetShopInfoQuery(shopId);
+  const { data: shopData, isPending: isGetPending } = useGetShopInfoQuery(shopIdStr);
   const { mutate: updateShop, isPending: isPutPending } = usePutShopInfoQuery();
 
   const { openModal, closeModal } = useModal();
@@ -27,11 +27,11 @@ const EditShopPage = () => {
       return;
     }
     updateShop(
-      { shopId, data: { ...data, id: shopId, category: data.category, address1: data.address1 } },
+      { shopId: shopIdStr, data: { ...data, id: shopIdStr, category: data.category, address1: data.address1 } },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["getShopInfo", shopId] });
-          openModal("confirm", "가게 정보 수정이 완료되었습니다.", () => router.replace(`/shopinfo/${shopId}`), {
+          queryClient.invalidateQueries({ queryKey: ["getShopInfo", shopIdStr] });
+          openModal("confirm", "가게 정보 수정이 완료되었습니다.", () => router.replace(`/employer/shops/${shopIdStr}`), {
             closeOnOverlayClick: false,
             closeOnEsc: false,
           });
@@ -44,7 +44,7 @@ const EditShopPage = () => {
   };
 
   const handleCloseClick = () => {
-    openModal("action", "가게 정보 수정을 취소하시겠습니까?", () => router.push(`/shopinfo/${shopId}`));
+    openModal("action", "가게 정보 수정을 취소하시겠습니까?", () => router.push(`/employer/shops/${shopIdStr}`));
   };
 
   useEffect(() => {

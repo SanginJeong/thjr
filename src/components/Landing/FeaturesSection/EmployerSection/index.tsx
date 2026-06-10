@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 const EmployerSection = () => {
   const router = useRouter();
   const handleShopClick = () => {
-    router.push("/shopinfo/register");
+    router.push("/employer/shops/register");
   };
 
   return (
