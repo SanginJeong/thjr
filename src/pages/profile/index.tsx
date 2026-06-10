@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import Layout from "@/components/Layout";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import SkeletonUI from "@/components/Skeleton";
 import Button from "@/components/Button";
 import Link from "next/link";
@@ -10,17 +10,30 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Profile = () => {
   const { userId } = useAuth();
+  const [mounted, setMounted] = useState(false);
   const { data: userInfo, isPending } = useGetMyInfoQuery(userId);
   const hasProfile = !!(userInfo?.item.name && userInfo?.item.phone && userInfo?.item.address);
 
   const router = useRouter();
+
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) {
+      return;
+    }
+    if (!userId) {
+      router.replace("/signin");
+      return;
+    }
     if (hasProfile) {
       router.replace(`/profile/${userId}`);
     }
-  }, [hasProfile, userId, router]);
+  }, [mounted, userId, hasProfile, router]);
 
-  if (isPending) {
+  if (!mounted || isPending) {
     return (
       <div className="mx-auto max-w-5xl px-24 py-60">
         <SkeletonUI count={1} boxClassName="h-40 w-105" />
@@ -29,11 +42,7 @@ const Profile = () => {
     );
   }
 
-  if (!userInfo) {
-    return null;
-  }
-
-  if (hasProfile) {
+  if (!userInfo || hasProfile) {
     return null;
   }
 

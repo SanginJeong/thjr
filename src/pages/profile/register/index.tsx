@@ -7,9 +7,7 @@ import { Option, SeoulAddress } from "@/types/global";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import IcXButton from "@/assets/svgs/ic_close.svg";
 import { useRouter } from "next/router";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
-import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import { SEOUL_ADDRESS_OPTIONS } from "@/constants/SEOUL_ADDRESS";
 import SelectBox from "@/components/SelectBox";
 import MessageModal from "@/components/Modal/MessageModal";
@@ -29,6 +27,12 @@ const ProfileRegister = () => {
 
   const { userId } = useAuth();
   const { data: userInfo } = useGetMyInfoQuery(userId);
+
+  useEffect(() => {
+    if (!userId) {
+      router.replace("/signin");
+    }
+  }, [userId, router]);
   const { mutate: putMyInfo, isSuccess, isPending } = usePutMyInfoQuery();
 
   const [profileData, setProfileData] = useState<RegisterData>({
