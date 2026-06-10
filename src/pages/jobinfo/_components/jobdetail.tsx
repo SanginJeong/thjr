@@ -4,7 +4,6 @@ import Button from "@/components/Button";
 import ToastContainer from "@/components/Toast";
 import MessageModal from "@/components/Modal/MessageModal";
 import { CardImageBox, CardTime, CardAddress, CardPay, CardDescription } from "@/components/ShopInfo";
-import { getCookieValue } from "@/utils/getCookie";
 import { isStartTimePassed } from "@/utils/formatTime";
 import { addRecentViewedJob } from "@/utils/recentList";
 import { useGetUserApplicationsQuery } from "@/hooks/api/application/useGetUserApplicationsQuery";
@@ -16,6 +15,7 @@ import {
   GetShopNoticeDetailResponse,
 } from "@/hooks/api/notice/useGetShopNoticeDetailQuery";
 import SkeletonUI from "@/components/Skeleton";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ButtonSetting {
   buttonText: string;
@@ -30,8 +30,7 @@ interface JobDetailProps extends GetShopNoticeDetailRequest {
 }
 
 const JobDetail = ({ shopId, noticeId, jobData, isPending }: JobDetailProps) => {
-  const [userId, setUserId] = useState("");
-  const [userType, setUserType] = useState("");
+  const { userId, userType } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isApply, setIsApply] = useState(false);
   const [isProfile, setIsProfile] = useState(false);
@@ -41,15 +40,6 @@ const JobDetail = ({ shopId, noticeId, jobData, isPending }: JobDetailProps) => 
   const handleClose = () => {
     setIsOpen(false);
   };
-
-  useEffect(() => {
-    if (typeof document !== "undefined") {
-      const id = getCookieValue(document.cookie, "userId") as string;
-      const type = getCookieValue(document.cookie, "userType") as string;
-      setUserId(id);
-      setUserType(type);
-    }
-  }, []);
 
   const {
     mutate: postShopApplication,

@@ -13,11 +13,12 @@ import { useAuth } from "@/hooks/useAuth";
 
 const EditShopPage = () => {
   const router = useRouter();
-  const { shopId } = router.query;
+  const q = router.query;
+  const shopURL = q.shopId;
+  const shopId = String(shopURL);
   const { userId } = useAuth();
-  const shopIdStr = String(shopId);
   const queryClient = useQueryClient();
-  const { data: shopData, isPending: isGetPending } = useGetShopInfoQuery(shopIdStr);
+  const { data: shopData, isPending: isGetPending } = useGetShopInfoQuery(shopId);
   const { mutate: updateShop, isPending: isPutPending } = usePutShopInfoQuery();
 
   const { openModal, closeModal } = useModal();
@@ -27,11 +28,11 @@ const EditShopPage = () => {
       return;
     }
     updateShop(
-      { shopId: shopIdStr, data: { ...data, id: shopIdStr, category: data.category, address1: data.address1 } },
+      { shopId: shopId, data: { ...data, id: shopId, category: data.category, address1: data.address1 } },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["getShopInfo", shopIdStr] });
-          openModal("confirm", "가게 정보 수정이 완료되었습니다.", () => router.replace(`/employer/shops/${shopIdStr}`), {
+          queryClient.invalidateQueries({ queryKey: ["getShopInfo", shopId] });
+          openModal("confirm", "가게 정보 수정이 완료되었습니다.", () => router.replace(`/employer/shops/${shopId}`), {
             closeOnOverlayClick: false,
             closeOnEsc: false,
           });
@@ -44,7 +45,7 @@ const EditShopPage = () => {
   };
 
   const handleCloseClick = () => {
-    openModal("action", "가게 정보 수정을 취소하시겠습니까?", () => router.push(`/employer/shops/${shopIdStr}`));
+    openModal("action", "가게 정보 수정을 취소하시겠습니까?", () => router.push(`/employer/shops/${shopId}`));
   };
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import RegisterForm, { FormData } from "@/pages/employer/jobinfo/_components/RegisterForm";
+import RegisterForm, { FormData } from "../_components/RegisterForm";
 import { usePostShopNoticesQuery } from "@/hooks/api/notice/usePostShopNoticesQuery";
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";
@@ -9,8 +9,9 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const RegisterJobinfo = () => {
   const router = useRouter();
-  const { shopId } = router.query;
-  const shopIdStr = String(shopId);
+  const q = router.query;
+  const shopURL = q.shopId;
+  const shopId = String(shopURL);
 
   const queryClient = useQueryClient();
   const { mutate: postShopNotice, isPending } = usePostShopNoticesQuery();
@@ -18,12 +19,12 @@ const RegisterJobinfo = () => {
 
   const handleSubmit = (data: FormData) => {
     postShopNotice(
-      { shopId: shopIdStr, data },
+      { shopId: shopId, data },
       {
         onSuccess: (res) => {
           const notice_id = res.item.id;
-          queryClient.invalidateQueries({ queryKey: ["getShopNotices", shopIdStr] });
-          openModal("confirm", "공고 등록이 완료되었습니다.", () => router.replace(`/employer/shops/${shopIdStr}/notices/${notice_id}`), {
+          queryClient.invalidateQueries({ queryKey: ["getShopNotices", shopId] });
+          openModal("confirm", "공고 등록이 완료되었습니다.", () => router.replace(`/employer/shops/${shopId}/notices/${notice_id}`), {
             closeOnOverlayClick: false,
             closeOnEsc: false,
           });
@@ -36,7 +37,7 @@ const RegisterJobinfo = () => {
   };
 
   const handleCloseClick = () => {
-    openModal("action", "공고 등록을 취소하시겠습니까?", () => router.push(`/employer/shops/${shopIdStr}`));
+    openModal("action", "공고 등록을 취소하시겠습니까?", () => router.push(`/employer/shops/${shopId}`));
   };
 
   return (
