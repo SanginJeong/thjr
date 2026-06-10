@@ -65,7 +65,7 @@ const JobList = ({ startsAtGte }: InferGetServerSidePropsType<typeof getServerSi
   };
 
   const handlePageChange = (pageNumber: number) => {
-    router.push({ pathname: router.pathname, query: { ...query, page: pageNumber } });
+    router.push({ pathname: router.pathname, query: { ...query, page: pageNumber } }, undefined, { scroll: false });
   };
 
   const handleSortChange = (option: { value: string }) => {
