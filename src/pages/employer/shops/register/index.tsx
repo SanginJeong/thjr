@@ -8,11 +8,13 @@ import { usePostShopQuery } from "@/hooks/api/shop/usePostShopQuery";
 import { useModal } from "@/hooks/useModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
+import { useQueryClient } from "@tanstack/react-query";
 
 const RegisterShopPage = () => {
   const router = useRouter();
   const { userId, userType } = useAuth();
   const { openModal, closeModal } = useModal();
+  const queryClient = useQueryClient();
   const { mutate: postShop, isPending } = usePostShopQuery();
 
   const { data: myInfo } = useGetMyInfoQuery(userId, { enabled: !!userId && userType === "employer" });
@@ -45,6 +47,7 @@ const RegisterShopPage = () => {
       {
         onSuccess: (res) => {
           const shopId = res.item.id;
+          queryClient.invalidateQueries({ queryKey: ["getMyInfo", userId] });
           openModal("confirm", "가게 등록이 완료되었습니다.", () => router.replace(`/employer/shops/${shopId}`), {
             closeOnOverlayClick: false,
             closeOnEsc: false,

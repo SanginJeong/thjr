@@ -8,7 +8,7 @@ import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { useModal } from "@/hooks/useModal";
 import SkeletonUI from "@/components/Skeleton";
-import { QueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 
 const EditShopPage = () => {
@@ -16,7 +16,7 @@ const EditShopPage = () => {
   const { shopId } = router.query;
   const { userId } = useAuth();
   const shopIdStr = String(shopId);
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const { data: shopData, isPending: isGetPending } = useGetShopInfoQuery(shopIdStr);
   const { mutate: updateShop, isPending: isPutPending } = usePutShopInfoQuery();
 

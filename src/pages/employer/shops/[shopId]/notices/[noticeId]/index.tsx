@@ -1,5 +1,4 @@
 import Head from "next/head";
-import type { InferGetServerSidePropsType } from "next";
 import { useState } from "react";
 import JobInfoCard from "@/pages/employer/_components/JobInfoCard";
 import JobInfoTable from "@/pages/employer/_components/JobInfoTable";

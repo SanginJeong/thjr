@@ -5,12 +5,14 @@ import { usePostShopNoticesQuery } from "@/hooks/api/notice/usePostShopNoticesQu
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";
 import { useModal } from "@/hooks/useModal";
+import { useQueryClient } from "@tanstack/react-query";
 
 const RegisterJobinfo = () => {
   const router = useRouter();
   const { shopId } = router.query;
   const shopIdStr = String(shopId);
 
+  const queryClient = useQueryClient();
   const { mutate: postShopNotice, isPending } = usePostShopNoticesQuery();
   const { openModal, closeModal } = useModal();
 
@@ -20,6 +22,7 @@ const RegisterJobinfo = () => {
       {
         onSuccess: (res) => {
           const notice_id = res.item.id;
+          queryClient.invalidateQueries({ queryKey: ["getShopNotices", shopIdStr] });
           openModal("confirm", "공고 등록이 완료되었습니다.", () => router.replace(`/employer/shops/${shopIdStr}/notices/${notice_id}`), {
             closeOnOverlayClick: false,
             closeOnEsc: false,
