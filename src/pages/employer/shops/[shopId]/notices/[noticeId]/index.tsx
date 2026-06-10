@@ -20,8 +20,8 @@ const JobInfo = () => {
   const shopURL = q.shopId;
   const noticeURL = q.noticeId;
 
-  const shopId = String(shopURL);
-  const noticeId = String(noticeURL);
+  const shopId = typeof shopURL === "string" ? shopURL : "";
+  const noticeId = typeof noticeURL === "string" ? noticeURL : "";
 
   const [modalMessage, setModalMessage] = useState("");
   const [approval, setApproval] = useState<ResultStatus | undefined>(undefined);
@@ -54,7 +54,7 @@ const JobInfo = () => {
   };
 
   const handleClose = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(false);
   };
 
   const onModalMessage = (approval: ResultStatus, sendId: string) => {
@@ -72,8 +72,8 @@ const JobInfo = () => {
   const handleApprovalClick = (status: ResultStatus, sendId: string) => {
     mutation.mutate(
       {
-        shopId: appData?.items[0].item.shop.item.id || "",
-        noticeId: appData?.items[0].item.notice.item.id || "",
+        shopId,
+        noticeId,
         applicationId: sendId || "",
         data: { status },
       },
@@ -81,9 +81,7 @@ const JobInfo = () => {
         onSuccess: () => {
           refetch();
         },
-        onError: (error) => {
-          console.error("실패했어요:", error);
-        },
+        onError: () => {},
       },
     );
     setIsOpen(false);
@@ -109,7 +107,7 @@ const JobInfo = () => {
                 shopId={shopId}
                 noticeId={noticeId}
                 isLoading={isLoading}
-                closed={res[0]?.item?.notice.item.closed}
+                closed={res[0]?.item?.notice.item.closed ?? false}
               />
             </section>
             <section className="mx-auto py-40 tablet:py-60 desktop:max-w-964">

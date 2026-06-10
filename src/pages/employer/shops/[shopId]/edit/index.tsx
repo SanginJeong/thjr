@@ -14,8 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 const EditShopPage = () => {
   const router = useRouter();
   const q = router.query;
-  const shopURL = q.shopId;
-  const shopId = String(shopURL);
+  const shopId = typeof q.shopId === "string" ? q.shopId : "";
   const { userId } = useAuth();
   const queryClient = useQueryClient();
   const { data: shopData, isPending: isGetPending } = useGetShopInfoQuery(shopId);
@@ -93,10 +92,14 @@ const EditShopPage = () => {
       <div className="bg-gray-5">
         <div className="m-auto max-w-1028 px-12 py-40 tablet:px-32 tablet:py-60">
           <div className="relative">
-            <IcClose
+            <button
+              type="button"
               onClick={handleCloseClick}
-              className="absolute right-0 top-0 w-24 hover:cursor-pointer tablet:w-32"
-            />
+              aria-label="가게 수정 취소"
+              className="absolute right-0 top-0"
+            >
+              <IcClose className="w-24 tablet:w-32" />
+            </button>
             <h1 className="mb-32 text-20-bold text-black tablet:text-28-bold">가게 수정</h1>
             <RegisterForm
               defaultValues={defaultValues}

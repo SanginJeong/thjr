@@ -32,5 +32,6 @@ export const useGetShopNoticeDetailQuery = ({ shopId, noticeId }: GetShopNoticeD
   return useQuery({
     queryKey: ["getShopNoticeDetail", shopId, noticeId],
     queryFn: () => getShopNoticeDetail({ shopId, noticeId }),
+    enabled: !!shopId && !!noticeId,
   });
 };

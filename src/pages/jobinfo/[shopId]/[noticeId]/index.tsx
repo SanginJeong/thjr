@@ -31,11 +31,8 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 const JobInfo = () => {
   const router = useRouter();
   const q = router.query;
-  const shopURL = q.shopId;
-  const noticeURL = q.noticeId;
-
-  const shopId = String(shopURL);
-  const noticeId = String(noticeURL);
+  const shopId = typeof q.shopId === "string" ? q.shopId : "";
+  const noticeId = typeof q.noticeId === "string" ? q.noticeId : "";
 
   const { data: jobData, isPending } = useGetShopNoticeDetailQuery({ shopId, noticeId });
 

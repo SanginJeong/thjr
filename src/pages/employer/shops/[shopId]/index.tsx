@@ -16,8 +16,7 @@ import SkeletonUI from "@/components/Skeleton";
 const ShopInfoDetail = () => {
   const router = useRouter();
   const q = router.query;
-  const shopURL = q.shopId;
-  const shopId = String(shopURL);
+  const shopId = typeof q.shopId === "string" ? q.shopId : "";
 
   const { data: shopInfo, isLoading: shopInfoLoading } = useGetShopInfoQuery(shopId);
 

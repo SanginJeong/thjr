@@ -77,10 +77,14 @@ const RegisterShopPage = () => {
       <div className="bg-gray-5">
         <div className="m-auto max-w-1028 px-12 py-40 tablet:px-32 tablet:py-60">
           <div className="relative">
-            <IcClose
+            <button
+              type="button"
               onClick={handleCloseClick}
-              className="absolute right-0 top-0 w-24 hover:cursor-pointer tablet:w-32"
-            />
+              aria-label="가게 등록 취소"
+              className="absolute right-0 top-0"
+            >
+              <IcClose className="w-24 tablet:w-32" />
+            </button>
             <h1 className="mb-32 text-20-bold text-black tablet:text-28-bold">내 가게</h1>
             <RegisterForm onSubmit={handleSubmit} isPending={isPending} submitLabel="등록" />
           </div>

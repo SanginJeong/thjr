@@ -23,7 +23,7 @@ const ShopInfo = () => {
   }, []);
 
   useEffect(() => {
-    if (!mounted) {
+    if (!mounted || isPending) {
       return;
     }
     if (!userId || userType !== "employer") {
@@ -33,7 +33,7 @@ const ShopInfo = () => {
     if (shopId) {
       router.replace(`/employer/shops/${shopId}`);
     }
-  }, [mounted, userId, userType, shopId, router]);
+  }, [mounted, isPending, userId, userType, shopId, router]);
 
   if (!mounted || isPending || shopId) {
     return null;

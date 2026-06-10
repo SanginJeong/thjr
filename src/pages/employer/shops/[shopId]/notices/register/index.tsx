@@ -10,8 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 const RegisterJobinfo = () => {
   const router = useRouter();
   const q = router.query;
-  const shopURL = q.shopId;
-  const shopId = String(shopURL);
+  const shopId = typeof q.shopId === "string" ? q.shopId : "";
 
   const queryClient = useQueryClient();
   const { mutate: postShopNotice, isPending } = usePostShopNoticesQuery();
@@ -49,10 +48,14 @@ const RegisterJobinfo = () => {
       <div className="bg-gray-5">
         <div className="m-auto max-w-1028 px-12 py-40 tablet:px-32 tablet:py-60">
           <div className="relative">
-            <IcClose
+            <button
+              type="button"
               onClick={handleCloseClick}
-              className="absolute right-0 top-0 w-24 hover:cursor-pointer tablet:w-32"
-            />
+              aria-label="공고 등록 취소"
+              className="absolute right-0 top-0"
+            >
+              <IcClose className="w-24 tablet:w-32" />
+            </button>
             <h1 className="mb-32 text-20-bold text-black tablet:text-28-bold">공고 등록</h1>
             <RegisterForm onSubmit={handleSubmit} isPending={isPending} submitLabel="등록" />
           </div>
