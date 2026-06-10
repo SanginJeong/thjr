@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import Layout from "@/components/Layout";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import SkeletonUI from "@/components/Skeleton";
 import Button from "@/components/Button";
 import Link from "next/link";
@@ -11,8 +11,14 @@ import { useAuth } from "@/hooks/useAuth";
 const Profile = () => {
   const { userId } = useAuth();
   const { data: userInfo, isPending } = useGetMyInfoQuery(userId);
+  const hasProfile = !!(userInfo?.item.name && userInfo?.item.phone && userInfo?.item.address);
 
   const router = useRouter();
+  useEffect(() => {
+    if (hasProfile) {
+      router.replace(`/profile/${userId}`);
+    }
+  }, [hasProfile, userId, router]);
 
   if (isPending) {
     return (
@@ -27,10 +33,8 @@ const Profile = () => {
     return null;
   }
 
-  const hasProfile = !!(userInfo.item.name && userInfo.item.phone && userInfo.item.address);
-
   if (hasProfile) {
-    router.push(`/profile/${userId}`);
+    return null;
   }
 
   return (
