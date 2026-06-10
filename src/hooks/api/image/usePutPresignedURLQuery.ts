@@ -19,7 +19,5 @@ const putPresignedURL = async ({ presignedURL, file }: PutPresignedURLRequest) =
 export const usePutPresignedURLQuery = () => {
   return useMutation({
     mutationFn: putPresignedURL,
-    onSuccess: (res) => console.log("이미지 등록 성공", res),
-    onError: (err) => console.log(err),
   });
 };

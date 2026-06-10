@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ApplicationItem, Link, NoticeItem, ShopItem, UserInfoItem, UserItem } from "@/types/global";
-import axios from "axios";
+import apiInstance from "@/lib/axios";
 
 export interface GetShopApplicationsRequest {
   shopId: string;
@@ -41,7 +41,7 @@ const getShopApplications = async ({
   noticeId,
   params,
 }: GetShopApplicationsRequest): Promise<GetShopApplicationsResponse> => {
-  const response = await axios.get(`/api/proxy/shops/${shopId}/notices/${noticeId}/applications`, { params });
+  const response = await apiInstance.get(`/shops/${shopId}/notices/${noticeId}/applications`, { params });
   return response.data;
 };
 
@@ -49,6 +49,7 @@ export const useGetShopApplicationsQuery = ({ shopId, noticeId, params }: GetSho
   return useQuery({
     queryKey: ["getShopApplications", shopId, noticeId, params],
     queryFn: () => getShopApplications({ shopId, noticeId, params }),
+    enabled: !!shopId && !!noticeId,
     refetchInterval: 30000,
   });
 };

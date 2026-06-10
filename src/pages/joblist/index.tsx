@@ -30,6 +30,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     queryKey: ["getNotices", jobDataApiParams],
     queryFn: () => getNotices(jobDataApiParams),
   });
+
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

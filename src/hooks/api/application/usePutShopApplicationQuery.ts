@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ApplicationItem, Link, NoticeItem, ShopItem, UserInfoItem, UserItem } from "@/types/global";
-import axios from "axios";
+import apiInstance from "@/lib/axios";
 
 export interface PutShopApplicationRequest {
   shopId: string;
@@ -35,10 +35,7 @@ const putShopApplication = async ({
   applicationId,
   data,
 }: PutShopApplicationRequest): Promise<PutShopApplicationResponse> => {
-  const response = await axios.put(
-    `/api/proxy/shops/${shopId}/notices/${noticeId}/applications/${applicationId}`,
-    data,
-  );
+  const response = await apiInstance.put(`/shops/${shopId}/notices/${noticeId}/applications/${applicationId}`, data);
   return response.data;
 };
 
@@ -56,7 +53,6 @@ export const usePutShopApplicationQuery = (options?: {
       options?.onSuccess?.(res);
     },
     onError: (err) => {
-      console.error(err);
       options?.onError?.(err);
     },
   });

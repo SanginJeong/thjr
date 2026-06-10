@@ -1,58 +1,39 @@
 import Head from "next/head";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
+import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import Layout from "@/components/Layout";
-import { ReactNode } from "react";
-import { getCookieValue } from "@/utils/getCookie";
+import { ReactNode, useEffect, useState } from "react";
 import SkeletonUI from "@/components/Skeleton";
 import Button from "@/components/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAuth } from "@/hooks/useAuth";
 
-const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const cookie = context.req.headers.cookie;
-  const userId = getCookieValue(cookie, "userId");
-  const userType = getCookieValue(cookie, "userType");
-  const queryClient = new QueryClient();
-
-  if (!userId) {
-    return {
-      redirect: {
-        destination: "/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  if (userType !== "employee") {
-    return {
-      redirect: {
-        destination: `/shopinfo`,
-        permanent: false,
-      },
-    };
-  }
-
-  await queryClient.prefetchQuery({
-    queryKey: ["getMyInfo", userId],
-    queryFn: () => getMyInfo(userId),
-  });
-
-  return {
-    props: {
-      userId,
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
-
-const Profile = ({ userId }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Profile = () => {
+  const { userId } = useAuth();
+  const [mounted, setMounted] = useState(false);
   const { data: userInfo, isPending } = useGetMyInfoQuery(userId);
+  const hasProfile = !!(userInfo?.item.name && userInfo?.item.phone && userInfo?.item.address);
 
   const router = useRouter();
 
-  if (isPending) {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) {
+      return;
+    }
+    if (!userId) {
+      router.replace("/signin");
+      return;
+    }
+    if (hasProfile) {
+      router.replace(`/profile/${userId}`);
+    }
+  }, [mounted, userId, hasProfile, router]);
+
+  if (!mounted || isPending) {
     return (
       <div className="mx-auto max-w-5xl px-24 py-60">
         <SkeletonUI count={1} boxClassName="h-40 w-105" />
@@ -61,14 +42,8 @@ const Profile = ({ userId }: InferGetServerSidePropsType<typeof getServerSidePro
     );
   }
 
-  if (!userInfo) {
+  if (!userInfo || hasProfile) {
     return null;
-  }
-
-  const hasProfile = !!(userInfo.item.name && userInfo.item.phone && userInfo.item.address);
-
-  if (hasProfile) {
-    router.push(`/profile/${userId}`);
   }
 
   return (
@@ -96,5 +71,4 @@ Profile.getLayout = (page: ReactNode) => {
   return <Layout>{page}</Layout>;
 };
 
-export { getServerSideProps };
 export default Profile;

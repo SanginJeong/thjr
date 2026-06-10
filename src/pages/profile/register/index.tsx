@@ -7,15 +7,13 @@ import { Option, SeoulAddress } from "@/types/global";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import IcXButton from "@/assets/svgs/ic_close.svg";
 import { useRouter } from "next/router";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
-import { getMyInfo, useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import { SEOUL_ADDRESS_OPTIONS } from "@/constants/SEOUL_ADDRESS";
 import SelectBox from "@/components/SelectBox";
 import MessageModal from "@/components/Modal/MessageModal";
 import { formatPhoneNumber } from "@/utils/formatPhoneNumber";
 import Layout from "@/components/Layout";
-import { getCookieValue } from "@/utils/getCookie";
+import { useAuth } from "@/hooks/useAuth";
 
 type RegisterData = {
   name: string;
@@ -24,46 +22,17 @@ type RegisterData = {
   bio?: string;
 };
 
-const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const cookie = context.req.headers.cookie;
-  const userId = getCookieValue(cookie, "userId");
-  const userType = getCookieValue(cookie, "userType");
-
-  if (!userId) {
-    return {
-      redirect: {
-        destination: "/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  if (userType !== "employee") {
-    return {
-      redirect: {
-        destination: `/shopinfo`,
-        permanent: false,
-      },
-    };
-  }
-
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["getMyInfo", userId],
-    queryFn: () => getMyInfo(userId),
-  });
-  return {
-    props: {
-      userId,
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
-
-const ProfileRegister = ({ userId }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ProfileRegister = () => {
   const router = useRouter();
 
+  const { userId } = useAuth();
   const { data: userInfo } = useGetMyInfoQuery(userId);
+
+  useEffect(() => {
+    if (!userId) {
+      router.replace("/signin");
+    }
+  }, [userId, router]);
   const { mutate: putMyInfo, isSuccess, isPending } = usePutMyInfoQuery();
 
   const [profileData, setProfileData] = useState<RegisterData>({
@@ -246,5 +215,4 @@ ProfileRegister.getLayout = (page: ReactNode) => {
   return <Layout>{page}</Layout>;
 };
 
-export { getServerSideProps };
 export default ProfileRegister;
