@@ -84,3 +84,9 @@ ehthumbs_vista.db
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
+
+# Playwright E2E
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/e2e/.auth/
