@@ -48,3 +48,26 @@ test.describe("회원가입 / 로그인", () => {
     await expect(page).toHaveURL(/\/signin/);
   });
 });
+
+test.describe("보호 페이지 진입 가드 (_document 인라인 스크립트)", () => {
+  // 보호 페이지의 정적 셸(#__next 안의 스켈레톤)이 한 번이라도 파싱되면 sessionStorage 에 기록한다.
+  // 가드가 <head> 에서 먼저 리다이렉트하면 body 가 파싱되지 않으므로 기록이 남지 않아야 한다.
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      const guardedPath = location.pathname;
+      if (guardedPath === "/signin") return;
+      new MutationObserver(() => {
+        const root = document.getElementById("__next");
+        if (root && root.childNodes.length > 0) sessionStorage.setItem("guardedShellPainted", guardedPath);
+      }).observe(document, { childList: true, subtree: true });
+    });
+  });
+
+  for (const path of ["/profile", "/profile/register", "/employer/shops", "/employer/shops/register"]) {
+    test(`비로그인으로 ${path} 에 들어가면 화면을 그리기 전에 /signin 으로 이동한다`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page).toHaveURL(/\/signin$/);
+      expect(await page.evaluate(() => sessionStorage.getItem("guardedShellPainted"))).toBeNull();
+    });
+  }
+});

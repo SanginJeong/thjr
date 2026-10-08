@@ -6,6 +6,7 @@ import { useLogoutQuery } from "@/hooks/api/auth/useLogoutQuery";
 import { useEffect, useRef, useState } from "react";
 import { useGetUserAlertsQuery } from "@/hooks/api/alert/useGetUserAlertsQuery";
 import { useAuth } from "@/hooks/useAuth";
+import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 
 const linkStyle = "text-14-bold tablet:text-16-bold";
 const navStyle = "order-2 ml-auto flex h-30 shrink-0 tablet:order-3 tablet:h-40";
@@ -60,6 +61,9 @@ const UserHeader = () => {
   const [isMounted, setIsMounted] = useState(false);
   const { logout } = useLogoutQuery();
   const { data: alertData } = useGetUserAlertsQuery({ userId, options: { enabled: !!userId } });
+  // 가게가 있으면 /employer/shops 를 거치지 않고 가게 상세로 바로 보낸다 (중간 리다이렉트 깜빡임 제거).
+  const { data: myInfo } = useGetMyInfoQuery(userId, { enabled: userType === "employer" });
+  const shopId = myInfo?.item.shop?.item.id;
 
   const [isNoticeOpen, setIsNoticeOpen] = useState(false);
 
@@ -94,7 +98,12 @@ const UserHeader = () => {
       <ul className="flex items-center gap-16 desktop:gap-40">
         {userType && (
           <li>
-            <Link href={userMenuItem.userPage[userType].href} className={linkStyle}>
+            <Link
+              href={
+                userType === "employer" && shopId ? `/employer/shops/${shopId}` : userMenuItem.userPage[userType].href
+              }
+              className={linkStyle}
+            >
               {userMenuItem.userPage[userType].title}
             </Link>
           </li>

@@ -1,13 +1,12 @@
 import Head from "next/head";
 import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
-import ProfileSection from "../_components/Profile/ProfileDetail/ProfileSection";
+import ProfileSection from "./ProfileSection";
 import SkeletonUI from "@/components/Skeleton";
-import Layout from "@/components/Layout";
-import ApplicationLogSection from "../_components/Profile/ProfileDetail/ApplicationLogSection";
+import ApplicationLogSection from "./ApplicationLogSection";
 import { useGetUserApplicationsQuery } from "@/hooks/api/application/useGetUserApplicationsQuery";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import EmptyApplicationLog from "../_components/Profile/ProfileDetail/EmptyApplicationLog";
+import EmptyApplicationLog from "./EmptyApplicationLog";
 import { useAuth } from "@/hooks/useAuth";
 
 const LIMIT = 5;
@@ -80,7 +79,3 @@ const ProfileDetail = () => {
 };
 
 export default ProfileDetail;
-
-ProfileDetail.getLayout = (page: React.ReactNode) => {
-  return <Layout>{page}</Layout>;
-};

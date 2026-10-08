@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "@/hooks/useAuth";
+import ProfileDetail from "./_components/Profile/ProfileDetail";
 
 const Profile = () => {
   const { userId } = useAuth();
@@ -26,12 +27,8 @@ const Profile = () => {
     }
     if (!userId) {
       router.replace("/signin");
-      return;
     }
-    if (hasProfile) {
-      router.replace(`/profile/${userId}`);
-    }
-  }, [mounted, userId, hasProfile, router]);
+  }, [mounted, userId, router]);
 
   if (!mounted || isPending) {
     return (
@@ -42,8 +39,12 @@ const Profile = () => {
     );
   }
 
-  if (!userInfo || hasProfile) {
+  if (!userInfo) {
     return null;
+  }
+
+  if (hasProfile) {
+    return <ProfileDetail />;
   }
 
   return (
