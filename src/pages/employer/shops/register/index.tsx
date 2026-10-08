@@ -1,18 +1,20 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import RegisterForm, { FormData } from "@/pages/employer/shops/_components/RegisterForm";
+import RegisterForm, { FormData } from "@/features/employer/ShopRegisterForm";
 import { useEffect } from "react";
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";
 import { usePostShopQuery } from "@/hooks/api/shop/usePostShopQuery";
 import { useModal } from "@/hooks/useModal";
 import { useAuth } from "@/hooks/useAuth";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import { useQueryClient } from "@tanstack/react-query";
 
 const RegisterShopPage = () => {
   const router = useRouter();
   const { userId, userType } = useAuth();
+  const { isAuthorized } = useAuthGuard();
   const { openModal, closeModal } = useModal();
   const queryClient = useQueryClient();
   const { mutate: postShop, isPending } = usePostShopQuery();
@@ -21,21 +23,13 @@ const RegisterShopPage = () => {
   const existingShopId = myInfo?.item?.shop?.item?.id;
 
   useEffect(() => {
-    if (!userId) {
-      router.replace("/signin");
-      return;
-    }
-    if (userType !== "employer") {
-      router.replace("/joblist");
-      return;
-    }
-    if (existingShopId) {
+    if (isAuthorized && existingShopId) {
       openModal("confirm", "이미 등록된 가게가 있습니다.", () => router.replace(`/employer/shops/${existingShopId}`), {
         closeOnOverlayClick: false,
         closeOnEsc: false,
       });
     }
-  }, [userId, userType, existingShopId, openModal, router]);
+  }, [isAuthorized, existingShopId, openModal, router]);
 
   const handleSubmit = (data: FormData) => {
     if (!data.category || !data.address1) {
@@ -64,7 +58,7 @@ const RegisterShopPage = () => {
     openModal("action", "가게 등록을 취소하시겠습니까?", () => router.push("/employer/shops"));
   };
 
-  if (!userId || userType !== "employer") {
+  if (!isAuthorized) {
     return null;
   }
 

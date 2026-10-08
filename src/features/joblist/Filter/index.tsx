@@ -1,11 +1,11 @@
 import Ic_X from "@/assets/svgs/ic_x.svg";
 import { SEOUL_ADDRESS } from "@/constants/SEOUL_ADDRESS";
 import { ChangeEvent, useRef, useState } from "react";
-import ClosedBadge from "../../../../components/Badge/ClosedBadge";
+import ClosedBadge from "@/components/Badge/ClosedBadge";
 import { cn } from "@/utils";
 import { useEscClose } from "@/hooks/useEscClose";
-import Input from "../../../../components/Input";
-import Button from "../../../../components/Button";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
 import { getNoticesRequest } from "@/hooks/api/notice/useGetNoticesQuery";
 import { useModal } from "@/hooks/useModal";
 

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import RegisterForm, { FormData } from "../../_components/RegisterForm";
+import RegisterForm, { FormData } from "@/features/employer/NoticeRegisterForm";
 import { usePutShopNoticeDetailQuery } from "@/hooks/api/notice/usePutShopNoticeDetail";
 import { useGetShopNoticeDetailQuery } from "@/hooks/api/notice/useGetShopNoticeDetailQuery";
 import { useEffect } from "react";

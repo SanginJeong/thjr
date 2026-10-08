@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useState } from "react";
-import JobInfoCard from "@/pages/employer/_components/JobInfoCard";
-import JobInfoTable from "@/pages/employer/_components/JobInfoTable";
+import JobInfoCard from "@/features/employer/JobInfoCard";
+import JobInfoTable from "@/features/employer/JobInfoTable";
 import MessageModal from "@/components/Modal/MessageModal";
 import { usePutShopApplicationQuery } from "@/hooks/api/application/usePutShopApplicationQuery";
 import { useGetShopApplicationsQuery } from "@/hooks/api/application/useGetShopApplicationsQuery";

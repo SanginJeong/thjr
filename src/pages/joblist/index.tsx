@@ -5,8 +5,8 @@ import { NoticeSort } from "@/types/global";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
-import RecommendJobs from "./_components/RecommendJobs";
-import JobListSection from "./_components/JobListSection";
+import RecommendJobs from "@/features/joblist/RecommendJobs";
+import JobListSection from "@/features/joblist/JobListSection";
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const query = context.query;

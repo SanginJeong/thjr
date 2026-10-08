@@ -14,6 +14,7 @@ import MessageModal from "@/components/Modal/MessageModal";
 import { formatPhoneNumber } from "@/utils/formatPhoneNumber";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/hooks/useAuth";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 type RegisterData = {
   name: string;
@@ -26,13 +27,8 @@ const ProfileRegister = () => {
   const router = useRouter();
 
   const { userId } = useAuth();
+  const { isAuthorized } = useAuthGuard();
   const { data: userInfo } = useGetMyInfoQuery(userId);
-
-  useEffect(() => {
-    if (!userId) {
-      router.replace("/signin");
-    }
-  }, [userId, router]);
   const { mutate: putMyInfo, isSuccess, isPending } = usePutMyInfoQuery();
 
   const [profileData, setProfileData] = useState<RegisterData>({
@@ -132,6 +128,10 @@ const ProfileRegister = () => {
       setButtonMessage("등록하기");
     }
   }, [isPending]);
+
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <>

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import RegisterForm, { FormData } from "../_components/RegisterForm";
+import RegisterForm, { FormData } from "@/features/employer/NoticeRegisterForm";
 import { usePostShopNoticesQuery } from "@/hooks/api/notice/usePostShopNoticesQuery";
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { API_URL, uniqueEmail, TEST_PASSWORD } from "./config";
+import { API_URL, uniqueEmail, TEST_PASSWORD, employeeStatePath, employerStatePath } from "./config";
 
 // 인증 흐름은 로그인 상태를 재사용하지 않고 매번 새로 검증한다.
 test.use({ storageState: { cookies: [], origins: [] } });
@@ -70,4 +70,33 @@ test.describe("보호 페이지 진입 가드 (_document 인라인 스크립트)
       expect(await page.evaluate(() => sessionStorage.getItem("guardedShellPainted"))).toBeNull();
     });
   }
+});
+
+// 로그인 상태에서 보호 페이지를 새로고침(하드 로드)해도 /signin 으로 튕기지 않아야 한다.
+// (AuthContext 가 localStorage 를 읽기 전에 가드가 판단하던 버그의 회귀 테스트)
+test.describe("로그인 상태 하드 로드 - 알바", () => {
+  test.use({ storageState: employeeStatePath });
+
+  for (const path of ["/profile", "/profile/register"]) {
+    test(`${path} 를 직접 열어도 페이지에 머문다`, async ({ page }) => {
+      await page.goto(path);
+      await page.waitForLoadState("networkidle");
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+    });
+  }
+
+  test("사장님 전용 페이지는 그리기 전에 /joblist 로 보낸다", async ({ page }) => {
+    await page.goto("/employer/shops/register");
+    await expect(page).toHaveURL(/\/joblist/);
+  });
+});
+
+test.describe("로그인 상태 하드 로드 - 사장님", () => {
+  test.use({ storageState: employerStatePath });
+
+  test("/employer/shops/register 를 직접 열어도 페이지에 머문다", async ({ page }) => {
+    await page.goto("/employer/shops/register");
+    await page.waitForLoadState("networkidle");
+    await expect(page).toHaveURL(/\/employer\/shops\/register$/);
+  });
 });

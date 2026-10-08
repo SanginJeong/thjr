@@ -2,14 +2,15 @@ import Head from "next/head";
 import Button from "@/components/Button";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 
 const ShopInfo = () => {
-  const { userId, userType } = useAuth();
+  const { userId } = useAuth();
+  const { isAuthorized } = useAuthGuard();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
 
   const { data, isPending } = useGetMyInfoQuery(userId);
   const shopId = data?.item.shop?.item.id;
@@ -19,23 +20,12 @@ const ShopInfo = () => {
   };
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted || isPending) {
-      return;
-    }
-    if (!userId || userType !== "employer") {
-      router.replace("/signin");
-      return;
-    }
-    if (shopId) {
+    if (isAuthorized && shopId) {
       router.replace(`/employer/shops/${shopId}`);
     }
-  }, [mounted, isPending, userId, userType, shopId, router]);
+  }, [isAuthorized, shopId, router]);
 
-  if (!mounted || isPending || shopId) {
+  if (!isAuthorized || isPending || shopId) {
     return null;
   }
 

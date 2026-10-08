@@ -1,36 +1,21 @@
 import Head from "next/head";
 import { useGetMyInfoQuery } from "@/hooks/api/auth/useGetMyInfoQuery";
 import Layout from "@/components/Layout";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import SkeletonUI from "@/components/Skeleton";
 import Button from "@/components/Button";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useAuth } from "@/hooks/useAuth";
-import ProfileDetail from "./_components/Profile/ProfileDetail";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import ProfileDetail from "@/features/profile/Profile/ProfileDetail";
 
 const Profile = () => {
   const { userId } = useAuth();
-  const [mounted, setMounted] = useState(false);
+  const { isAuthorized } = useAuthGuard();
   const { data: userInfo, isPending } = useGetMyInfoQuery(userId);
   const hasProfile = !!(userInfo?.item.name && userInfo?.item.phone && userInfo?.item.address);
 
-  const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) {
-      return;
-    }
-    if (!userId) {
-      router.replace("/signin");
-    }
-  }, [mounted, userId, router]);
-
-  if (!mounted || isPending) {
+  if (!isAuthorized || isPending) {
     return (
       <div className="mx-auto max-w-5xl px-24 py-60">
         <SkeletonUI count={1} boxClassName="h-40 w-105" />

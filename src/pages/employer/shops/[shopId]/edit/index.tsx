@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useGetShopInfoQuery } from "@/hooks/api/shop/useGetShopInfoQuery";
 import { usePutShopInfoQuery } from "@/hooks/api/shop/usePutShopInfoQuery";
-import RegisterForm, { FormData } from "@/pages/employer/shops/_components/RegisterForm";
+import RegisterForm, { FormData } from "@/features/employer/ShopRegisterForm";
 import { useEffect } from "react";
 import IcClose from "@/assets/svgs/ic_close.svg";
 import Layout from "@/components/Layout";
